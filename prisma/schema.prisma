@@ -1,0 +1,386 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ServiceType {
+  DELIVERY
+  TAKEAWAY
+}
+
+enum OrderStatus {
+  DRAFT
+  PAYMENT_PENDING
+  PAYMENT_AUTHORIZED
+  SUBMITTED_TO_POS
+  ACCEPTED
+  PREPARING
+  READY_FOR_PICKUP
+  OUT_FOR_DELIVERY
+  COMPLETED
+  CANCELLED
+  REFUNDED
+  FAILED
+}
+
+enum PaymentStatus {
+  PENDING
+  AUTHORIZED
+  CAPTURED
+  FAILED
+  REFUNDED
+}
+
+enum IntegrationJobStatus {
+  PENDING
+  RUNNING
+  SUCCEEDED
+  FAILED
+  DEAD_LETTERED
+}
+
+enum ModifierGroupType {
+  SINGLE
+  MULTIPLE
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  passwordHash  String?
+  accounts      Account[]
+  sessions      Session[]
+  customer      Customer?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Location {
+  id           String        @id @default(cuid())
+  slug         String        @unique
+  name         String
+  addressLine1 String
+  postalCode   String
+  city         String
+  country      String        @default("NL")
+  timezone     String        @default("Europe/Amsterdam")
+  phone        String
+  email        String
+  menuItems    MenuItem[]
+  orders       Order[]
+  serviceAreas ServiceArea[]
+  openingHours OpeningHour[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model ServiceArea {
+  id          String   @id @default(cuid())
+  locationId  String
+  postalCode  String
+  minOrder    Decimal  @db.Decimal(10, 2)
+  deliveryFee Decimal  @db.Decimal(10, 2)
+  active      Boolean  @default(true)
+  location    Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
+
+  @@unique([locationId, postalCode])
+}
+
+model OpeningHour {
+  id          String      @id @default(cuid())
+  locationId  String
+  dayOfWeek   Int
+  opensAt     String
+  closesAt    String
+  serviceType ServiceType?
+  location    Location    @relation(fields: [locationId], references: [id], onDelete: Cascade)
+}
+
+model MenuCategory {
+  id          String     @id @default(cuid())
+  slug        String     @unique
+  name        String
+  description String     @default("")
+  imageUrl    String?
+  sortOrder   Int        @default(0)
+  isActive    Boolean    @default(true)
+  items       MenuItem[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model MenuItem {
+  id                String          @id @default(cuid())
+  locationId        String
+  categoryId        String
+  posItemId         String?
+  slug              String
+  name              String
+  description       String
+  price             Decimal         @db.Decimal(10, 2)
+  imageUrl          String?
+  active            Boolean         @default(true)
+  available         Boolean         @default(true)
+  spiceLevel        Int             @default(0)
+  dietaryLabels     Json            @default("[]")
+  allergenTags      Json            @default("[]")
+  isPopular         Boolean         @default(false)
+  prepTimeMinutes   Int             @default(20)
+  sortOrder         Int             @default(0)
+  category          MenuCategory    @relation(fields: [categoryId], references: [id])
+  location          Location        @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  modifierGroups    ModifierGroup[]
+  addonLinks        MenuItemAddon[]
+  upsellsFrom       MenuUpsell[]    @relation("UpsellSource")
+  upsellsTo         MenuUpsell[]    @relation("UpsellTarget")
+  comboItems        ComboMenuItem[]
+  orderItems        OrderItem[]
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  @@unique([locationId, slug])
+  @@index([locationId, categoryId, active, available])
+}
+
+model ModifierGroup {
+  id            String            @id @default(cuid())
+  itemId        String
+  name          String
+  type          ModifierGroupType @default(SINGLE)
+  isRequired    Boolean           @default(false)
+  minSelections Int               @default(0)
+  maxSelections Int               @default(1)
+  sortOrder     Int               @default(0)
+  item          MenuItem          @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  options       ModifierOption[]
+
+  @@index([itemId])
+}
+
+model ModifierOption {
+  id              String        @id @default(cuid())
+  modifierGroupId String
+  name            String
+  priceDelta      Decimal       @default(0) @db.Decimal(10, 2)
+  isDefault       Boolean       @default(false)
+  sortOrder       Int           @default(0)
+  modifierGroup   ModifierGroup @relation(fields: [modifierGroupId], references: [id], onDelete: Cascade)
+}
+
+model Addon {
+  id          String          @id @default(cuid())
+  slug        String          @unique
+  name        String
+  description String
+  price       Decimal         @db.Decimal(10, 2)
+  dietary     Json            @default("[]")
+  isAvailable Boolean         @default(true)
+  addonLinks  MenuItemAddon[]
+}
+
+model MenuItemAddon {
+  itemId    String
+  addonId   String
+  sortOrder Int      @default(0)
+  addon     Addon    @relation(fields: [addonId], references: [id], onDelete: Cascade)
+  item      MenuItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@id([itemId, addonId])
+}
+
+model MenuUpsell {
+  sourceItemId String
+  targetItemId String
+  reason       String
+  sortOrder    Int      @default(0)
+  sourceItem   MenuItem @relation("UpsellSource", fields: [sourceItemId], references: [id], onDelete: Cascade)
+  targetItem   MenuItem @relation("UpsellTarget", fields: [targetItemId], references: [id], onDelete: Cascade)
+
+  @@id([sourceItemId, targetItemId])
+}
+
+model ComboSuggestion {
+  id          String          @id @default(cuid())
+  slug        String          @unique
+  name        String
+  description String
+  savingsText String
+  sortOrder   Int             @default(0)
+  items       ComboMenuItem[]
+}
+
+model ComboMenuItem {
+  comboId String
+  itemId  String
+  role    String
+  combo   ComboSuggestion @relation(fields: [comboId], references: [id], onDelete: Cascade)
+  item    MenuItem        @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@id([comboId, itemId])
+}
+
+model Customer {
+  id        String    @id @default(cuid())
+  userId    String?   @unique
+  name      String
+  email     String    @unique
+  phone     String
+  user      User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  addresses Address[]
+  orders    Order[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Address {
+  id          String   @id @default(cuid())
+  customerId  String
+  label       String?
+  street      String
+  postalCode  String
+  city        String
+  country     String   @default("NL")
+  customer    Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Order {
+  id                    String       @id @default(cuid())
+  orderNumber           String       @unique
+  locationId            String
+  customerId            String
+  status                OrderStatus  @default(DRAFT)
+  serviceType           ServiceType
+  scheduledFor          DateTime?
+  subtotal              Decimal      @db.Decimal(10, 2)
+  deliveryFee           Decimal      @default(0) @db.Decimal(10, 2)
+  discountTotal         Decimal      @default(0) @db.Decimal(10, 2)
+  total                 Decimal      @db.Decimal(10, 2)
+  stripePaymentIntentId String?
+  posOrderId            String?
+  idempotencyKey        String       @unique
+  customer              Customer     @relation(fields: [customerId], references: [id])
+  location              Location     @relation(fields: [locationId], references: [id])
+  items                 OrderItem[]
+  payments              Payment[]
+  createdAt             DateTime     @default(now())
+  updatedAt             DateTime     @updatedAt
+
+  @@index([locationId, status])
+  @@index([customerId, createdAt])
+}
+
+model OrderItem {
+  id         String   @id @default(cuid())
+  orderId    String
+  menuItemId String
+  name       String
+  quantity   Int
+  unitPrice  Decimal  @db.Decimal(10, 2)
+  notes      String?
+  order      Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  menuItem   MenuItem @relation(fields: [menuItemId], references: [id])
+}
+
+model Payment {
+  id         String        @id @default(cuid())
+  orderId    String
+  provider   String        @default("stripe")
+  providerId String
+  status     PaymentStatus @default(PENDING)
+  amount     Decimal       @db.Decimal(10, 2)
+  order      Order         @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+}
+
+model Promotion {
+  id          String   @id @default(cuid())
+  code        String   @unique
+  name        String
+  description String
+  active      Boolean  @default(true)
+  startsAt    DateTime
+  endsAt      DateTime?
+  rules       Json
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model WebhookEvent {
+  id          String    @id @default(cuid())
+  provider    String
+  eventId     String
+  eventType   String
+  payload     Json
+  processedAt DateTime?
+  createdAt   DateTime  @default(now())
+
+  @@unique([provider, eventId])
+}
+
+model IntegrationJob {
+  id          String               @id @default(cuid())
+  type        String
+  status      IntegrationJobStatus @default(PENDING)
+  payload     Json
+  attempts    Int                  @default(0)
+  lastError   String?
+  nextRunAt   DateTime             @default(now())
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
+
+  @@index([status, nextRunAt])
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  actorId    String?
+  action     String
+  targetType String
+  targetId   String
+  diff       Json?
+  createdAt  DateTime @default(now())
+}

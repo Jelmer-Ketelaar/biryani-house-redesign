@@ -1,0 +1,307 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - generic [ref=e4]:
+      - link "Biryani House home" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e6]: BH
+        - generic [ref=e7]:
+          - generic [ref=e8]: Biryani House
+          - generic [ref=e9]:
+            - img [ref=e10]
+            - text: Dordrecht
+      - navigation "Primary navigation" [ref=e12]:
+        - link "Menu" [ref=e13] [cursor=pointer]:
+          - /url: /menu
+        - link "Reserve" [ref=e14] [cursor=pointer]:
+          - /url: /reserve
+        - link "Account" [ref=e15] [cursor=pointer]:
+          - /url: /account
+      - generic [ref=e16]:
+        - generic [ref=e17]:
+          - img [ref=e18]
+          - text: 14:00-22:00
+        - link "Order now" [ref=e21] [cursor=pointer]:
+          - /url: /order
+          - img [ref=e22]
+          - text: Order now
+  - main [ref=e26]:
+    - generic [ref=e29]:
+      - generic [ref=e30]:
+        - paragraph [ref=e31]:
+          - img [ref=e32]
+          - text: Open today 14:00-22:00
+        - heading "Order Biryani House" [level=1] [ref=e35]
+        - paragraph [ref=e36]: Browse chef favorites, filter by spice or diet, customize add-ons, and keep your cart visible on every screen size.
+      - generic [ref=e38]:
+        - generic [ref=e39]:
+          - paragraph [ref=e40]: "6"
+          - paragraph [ref=e41]: Dishes
+        - generic [ref=e42]:
+          - paragraph [ref=e43]: 25m
+          - paragraph [ref=e44]: Popular prep
+        - generic [ref=e45]:
+          - paragraph [ref=e46]: "4.8"
+          - paragraph [ref=e47]: Guest rating
+    - generic [ref=e49]:
+      - generic [ref=e51]:
+        - generic [ref=e52]: Search menu
+        - img [ref=e53]
+        - textbox "Search menu" [ref=e56]:
+          - /placeholder: Search biryani, curry, naan...
+      - generic [ref=e57]:
+        - button "All" [pressed] [ref=e58] [cursor=pointer]
+        - button "Biryani" [ref=e59] [cursor=pointer]
+        - button "Curry" [ref=e60] [cursor=pointer]
+        - button "Tandoori Grill" [ref=e61] [cursor=pointer]
+        - button "Breads & Rice" [ref=e62] [cursor=pointer]
+        - button "Drinks" [ref=e63] [cursor=pointer]
+    - generic [ref=e64]:
+      - complementary [ref=e65]:
+        - generic [ref=e66]:
+          - generic [ref=e67]:
+            - heading "Filters" [level=2] [ref=e68]:
+              - img [ref=e69]
+              - text: Filters
+            - button "Reset" [ref=e70] [cursor=pointer]
+          - button "Popular only" [ref=e71] [cursor=pointer]:
+            - text: Popular only
+            - img [ref=e72]
+          - generic [ref=e74]:
+            - text: Maximum spice
+            - generic [ref=e75]: Hot
+            - slider "Maximum spice level" [ref=e76]: "3"
+          - generic [ref=e77]:
+            - paragraph [ref=e78]: Dietary
+            - generic [ref=e79]:
+              - button "Vegetarian" [ref=e80] [cursor=pointer]
+              - button "Vegan" [ref=e81] [cursor=pointer]
+              - button "Gluten-free" [ref=e82] [cursor=pointer]
+              - button "Dairy-free" [ref=e83] [cursor=pointer]
+              - button "Nuts" [ref=e84] [cursor=pointer]
+              - button "Halal" [ref=e85] [cursor=pointer]
+        - generic [ref=e86]:
+          - heading "Combo suggestions" [level=2] [ref=e87]
+          - generic [ref=e89]:
+            - paragraph [ref=e90]: Dinner for two
+            - paragraph [ref=e91]: Chicken biryani, butter chicken, garlic naan, and mango lassi.
+            - paragraph [ref=e92]: Save about EUR 4 vs separate items
+      - generic [ref=e93]:
+        - generic [ref=e94]:
+          - generic [ref=e95]:
+            - paragraph [ref=e96]: 6 dishes match your choices
+            - heading "Today's menu" [level=2] [ref=e97]
+          - button "Clear" [ref=e98] [cursor=pointer]
+        - generic [ref=e99]:
+          - generic [ref=e100]:
+            - heading "Biryani" [level=3] [ref=e101]
+            - paragraph [ref=e102]: Slow-cooked basmati rice with layered spices, herbs, and raita.
+          - article [ref=e104]:
+            - generic [ref=e105]:
+              - generic [ref=e106]:
+                - generic [ref=e107]:
+                  - heading "Chicken Biryani" [level=3] [ref=e108]
+                  - generic [ref=e109]:
+                    - img [ref=e110]
+                    - text: Popular
+                - paragraph [ref=e112]: Fragrant basmati rice layered with marinated chicken, saffron, mint, and raita.
+              - generic [ref=e113]: € 14,95
+            - generic [ref=e114]:
+              - generic [ref=e115]:
+                - img [ref=e116]
+                - text: 25 min
+              - generic [ref=e119]:
+                - img [ref=e120]
+                - text: Medium
+              - generic [ref=e122]:
+                - img [ref=e123]
+                - text: Halal
+            - button "Customize" [ref=e126] [cursor=pointer]:
+              - img [ref=e127]
+              - text: Customize
+        - generic [ref=e128]:
+          - generic [ref=e129]:
+            - heading "Curry" [level=3] [ref=e130]
+            - paragraph [ref=e131]: Comforting sauces, grilled proteins, and vegetarian classics.
+          - generic [ref=e132]:
+            - article [ref=e133]:
+              - generic [ref=e134]:
+                - generic [ref=e135]:
+                  - generic [ref=e136]:
+                    - heading "Butter Chicken" [level=3] [ref=e137]
+                    - generic [ref=e138]:
+                      - img [ref=e139]
+                      - text: Popular
+                  - paragraph [ref=e141]: Tandoori chicken in a rich tomato, cashew, cream, and fenugreek sauce.
+                - generic [ref=e142]: € 15,95
+              - generic [ref=e143]:
+                - generic [ref=e144]:
+                  - img [ref=e145]
+                  - text: 20 min
+                - generic [ref=e148]:
+                  - img [ref=e149]
+                  - text: Mild
+                - generic [ref=e151]:
+                  - img [ref=e152]
+                  - text: Halal
+                - generic [ref=e155]:
+                  - img [ref=e156]
+                  - text: Nuts
+              - button "Customize" [ref=e159] [cursor=pointer]:
+                - img [ref=e160]
+                - text: Customize
+            - article [ref=e161]:
+              - generic [ref=e162]:
+                - generic [ref=e163]:
+                  - heading "Chana Masala" [level=3] [ref=e165]
+                  - paragraph [ref=e166]: Chickpeas simmered with tomato, ginger, coriander, and roasted spices.
+                - generic [ref=e167]: € 11,95
+              - generic [ref=e168]:
+                - generic [ref=e169]:
+                  - img [ref=e170]
+                  - text: 18 min
+                - generic [ref=e173]:
+                  - img [ref=e174]
+                  - text: Medium
+                - generic [ref=e176]:
+                  - img [ref=e177]
+                  - text: Vegan
+                - generic [ref=e180]:
+                  - img [ref=e181]
+                  - text: Vegetarian
+                - generic [ref=e184]:
+                  - img [ref=e185]
+                  - text: Gluten-free
+              - button "Customize" [ref=e188] [cursor=pointer]:
+                - img [ref=e189]
+                - text: Customize
+        - generic [ref=e190]:
+          - generic [ref=e191]:
+            - heading "Tandoori Grill" [level=3] [ref=e192]
+            - paragraph [ref=e193]: Charred skewers and clay-oven favorites with chutneys.
+          - article [ref=e195]:
+            - generic [ref=e196]:
+              - generic [ref=e197]:
+                - generic [ref=e198]:
+                  - heading "Tandoori Mix Grill" [level=3] [ref=e199]
+                  - generic [ref=e200]:
+                    - img [ref=e201]
+                    - text: Popular
+                - paragraph [ref=e203]: Chicken tikka, seekh kebab, and grilled vegetables with mint chutney.
+              - generic [ref=e204]: € 18,95
+            - generic [ref=e205]:
+              - generic [ref=e206]:
+                - img [ref=e207]
+                - text: 28 min
+              - generic [ref=e210]:
+                - img [ref=e211]
+                - text: Hot
+              - generic [ref=e213]:
+                - img [ref=e214]
+                - text: Halal
+            - button "Customize" [ref=e217] [cursor=pointer]:
+              - img [ref=e218]
+              - text: Customize
+        - generic [ref=e219]:
+          - generic [ref=e220]:
+            - heading "Breads & Rice" [level=3] [ref=e221]
+            - paragraph [ref=e222]: Fresh naan, extra rice, and cooling sides.
+          - article [ref=e224]:
+            - generic [ref=e225]:
+              - generic [ref=e226]:
+                - generic [ref=e227]:
+                  - heading "Garlic Naan" [level=3] [ref=e228]
+                  - generic [ref=e229]:
+                    - img [ref=e230]
+                    - text: Popular
+                - paragraph [ref=e232]: Fresh tandoor naan with garlic butter and coriander.
+              - generic [ref=e233]: € 3,50
+            - generic [ref=e234]:
+              - generic [ref=e235]:
+                - img [ref=e236]
+                - text: 8 min
+              - generic [ref=e239]:
+                - img [ref=e240]
+                - text: No spice
+              - generic [ref=e242]:
+                - img [ref=e243]
+                - text: Vegetarian
+              - generic [ref=e246]:
+                - img [ref=e247]
+                - text: Halal
+            - button "Customize" [ref=e250] [cursor=pointer]:
+              - img [ref=e251]
+              - text: Customize
+        - generic [ref=e252]:
+          - generic [ref=e253]:
+            - heading "Drinks" [level=3] [ref=e254]
+            - paragraph [ref=e255]: Lassi, soft drinks, and meal finishers.
+          - article [ref=e257]:
+            - generic [ref=e258]:
+              - generic [ref=e259]:
+                - heading "Mango Lassi" [level=3] [ref=e261]
+                - paragraph [ref=e262]: Chilled mango yogurt drink with cardamom.
+              - generic [ref=e263]: € 3,95
+            - generic [ref=e264]:
+              - generic [ref=e265]:
+                - img [ref=e266]
+                - text: 3 min
+              - generic [ref=e269]:
+                - img [ref=e270]
+                - text: No spice
+              - generic [ref=e272]:
+                - img [ref=e273]
+                - text: Vegetarian
+              - generic [ref=e276]:
+                - img [ref=e277]
+                - text: Gluten-free
+              - generic [ref=e280]:
+                - img [ref=e281]
+                - text: Halal
+            - button "Customize" [ref=e284] [cursor=pointer]:
+              - img [ref=e285]
+              - text: Customize
+    - generic [ref=e287]:
+      - generic [ref=e288]:
+        - img [ref=e290]
+        - generic [ref=e293]:
+          - paragraph [ref=e294]: 0 items
+          - paragraph [ref=e295]: Add dishes to start
+      - button "Checkout" [disabled]:
+        - text: Checkout
+        - img
+  - contentinfo [ref=e296]:
+    - generic [ref=e297]:
+      - generic [ref=e298]:
+        - paragraph [ref=e299]: Biryani House Dordrecht
+        - paragraph [ref=e300]: Direct ordering for fragrant biryani, clay-oven grill dishes, fresh naan, buffet reservations, and catering.
+        - generic [ref=e301]:
+          - generic [ref=e302]:
+            - img [ref=e303]
+            - text: Halal kitchen
+          - generic [ref=e306]:
+            - img [ref=e307]
+            - text: Secure checkout
+          - generic [ref=e310]:
+            - img [ref=e311]
+            - text: Fresh daily
+      - generic [ref=e314]:
+        - paragraph [ref=e315]: Service
+        - generic [ref=e316]:
+          - paragraph [ref=e317]:
+            - img [ref=e318]
+            - text: Open daily 14:00-22:00
+          - paragraph [ref=e321]:
+            - img [ref=e322]
+            - text: Dordrecht delivery and pickup
+          - paragraph [ref=e325]:
+            - img [ref=e326]
+            - text: Buffet and catering ready
+      - generic [ref=e328]:
+        - paragraph [ref=e329]: Explore
+        - generic [ref=e330]:
+          - link "Menu" [ref=e331] [cursor=pointer]:
+            - /url: /menu
+          - link "Reserve" [ref=e332] [cursor=pointer]:
+            - /url: /reserve
+          - link "Account" [ref=e333] [cursor=pointer]:
+            - /url: /account

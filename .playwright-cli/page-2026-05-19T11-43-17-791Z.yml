@@ -1,0 +1,342 @@
+- generic [ref=e2]:
+  - link "Skip to content" [ref=e3] [cursor=pointer]:
+    - /url: "#main"
+  - banner "Primary" [ref=e4]:
+    - generic [ref=e5]:
+      - link "Biryani House Dordrecht homepage" [ref=e6] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e7]: BH
+        - generic [ref=e8]:
+          - strong [ref=e9]: Biryani House
+          - generic [ref=e10]: Dordrecht
+      - navigation "Main navigation" [ref=e11]:
+        - link "Dishes" [ref=e12] [cursor=pointer]:
+          - /url: "#dishes"
+        - link "Buffet" [ref=e13] [cursor=pointer]:
+          - /url: "#buffet"
+        - link "Delivery" [ref=e14] [cursor=pointer]:
+          - /url: "#delivery"
+        - link "FAQ" [ref=e15] [cursor=pointer]:
+          - /url: "#faq"
+      - generic [ref=e16]:
+        - link "Call" [ref=e17] [cursor=pointer]:
+          - /url: tel:+31787851017
+          - img [ref=e18]
+          - text: Call
+        - link "Order now" [ref=e20] [cursor=pointer]:
+          - /url: /order
+          - text: Order now
+          - img [ref=e21]
+  - main [ref=e23]:
+    - region "Premium Indian food, ordered in under a minute." [ref=e24]:
+      - img "A copper bowl of biryani with naan, raita, chutney and lime" [ref=e25]
+      - generic [ref=e27]:
+        - generic [ref=e28]:
+          - generic "Restaurant status" [ref=e29]: Open today 14:00-22:00
+          - heading "Premium Indian food, ordered in under a minute." [level=1] [ref=e31]
+          - paragraph [ref=e32]: Authentic biryani, curries and tandoori dishes from Biryani House Dordrecht. Choose delivery, pickup, buffet or catering with clear timing before checkout.
+          - generic "Primary ordering actions" [ref=e33]:
+            - link "Start order" [ref=e34] [cursor=pointer]:
+              - /url: /order
+              - img [ref=e35]
+              - text: Start order
+            - link "Reserve buffet" [ref=e38] [cursor=pointer]:
+              - /url: /reserve
+              - img [ref=e39]
+              - text: Reserve buffet
+          - form "Check delivery postcode" [ref=e42]:
+            - generic [ref=e43]: Check delivery to your postcode
+            - generic [ref=e44]:
+              - textbox "Check delivery to your postcode" [ref=e45]:
+                - /placeholder: 3311 AB
+              - button "Check" [ref=e46] [cursor=pointer]
+            - paragraph [ref=e47]: Get delivery fee and ETA before browsing the menu.
+        - complementary "Fast order highlights" [ref=e48]:
+          - generic [ref=e49]:
+            - img [ref=e50]
+            - generic [ref=e55]: Estimated delivery
+            - strong [ref=e56]: 35-45 min
+          - generic [ref=e57]:
+            - generic [ref=e58]:
+              - strong [ref=e59]: €25
+              - text: delivery minimum
+            - generic [ref=e60]:
+              - strong [ref=e61]: 17:30
+              - text: buffet starts
+          - link "View full menu" [ref=e62] [cursor=pointer]:
+            - /url: /menu
+            - text: View full menu
+            - img [ref=e63]
+    - region "Trust indicators" [ref=e65]:
+      - generic [ref=e66]:
+        - generic [ref=e67]:
+          - img [ref=e68]
+          - generic [ref=e70]:
+            - strong [ref=e71]: 4.6+ local rating
+            - generic [ref=e72]: Review-led trust
+        - generic [ref=e73]:
+          - img [ref=e74]
+          - generic [ref=e77]:
+            - strong [ref=e78]: Secure checkout
+            - generic [ref=e79]: Protected payments
+        - generic [ref=e80]:
+          - img [ref=e81]
+          - generic [ref=e84]:
+            - strong [ref=e85]: Live ETA
+            - generic [ref=e86]: Delivery clarity
+        - generic [ref=e87]:
+          - img [ref=e88]
+          - generic [ref=e91]:
+            - strong [ref=e92]: Order direct
+            - generic [ref=e93]: No marketplace friction
+    - region "Current promotions" [ref=e94]:
+      - generic [ref=e95]:
+        - article [ref=e96]:
+          - img [ref=e97]
+          - generic [ref=e101]:
+            - strong [ref=e102]: Dinner for two
+            - generic [ref=e103]: Biryani, curry, naan and dessert from €34,95.
+          - link "Order bundle" [ref=e104] [cursor=pointer]:
+            - /url: /order
+        - article [ref=e105]:
+          - img [ref=e106]
+          - generic [ref=e108]:
+            - strong [ref=e109]: Catering for groups
+            - generic [ref=e110]: Request a quote for office lunches, birthdays and events.
+          - link "Get quote" [ref=e111] [cursor=pointer]:
+            - /url: /catering
+    - region "Featured dishes built for fast decisions" [ref=e112]:
+      - generic [ref=e113]:
+        - generic [ref=e114]:
+          - generic [ref=e115]: Popular now
+          - heading "Featured dishes built for fast decisions" [level=2] [ref=e116]
+          - paragraph [ref=e117]: High-confidence favorites with clear pricing, spice guidance and direct ordering.
+        - generic [ref=e118]:
+          - article [ref=e119]:
+            - generic [ref=e121]: "1"
+            - generic [ref=e122]:
+              - generic [ref=e123]:
+                - generic [ref=e124]: Best seller
+                - generic [ref=e125]: Medium
+              - heading "Royal Chicken Biryani" [level=3] [ref=e126]
+              - paragraph [ref=e127]: Fragrant basmati rice, tender chicken, saffron, browned onion and raita.
+              - generic [ref=e128]:
+                - strong [ref=e129]: €14,95
+                - link "Order Royal Chicken Biryani" [ref=e130] [cursor=pointer]:
+                  - /url: /order
+                  - text: Add
+          - article [ref=e131]:
+            - generic [ref=e133]: "2"
+            - generic [ref=e134]:
+              - generic [ref=e135]:
+                - generic [ref=e136]: Guest favorite
+                - generic [ref=e137]: Mild
+              - heading "Butter Chicken" [level=3] [ref=e138]
+              - paragraph [ref=e139]: Creamy tomato curry with tandoori chicken and a rich North Indian finish.
+              - generic [ref=e140]:
+                - strong [ref=e141]: €15,50
+                - link "Order Butter Chicken" [ref=e142] [cursor=pointer]:
+                  - /url: /order
+                  - text: Add
+          - article [ref=e143]:
+            - generic [ref=e145]: "3"
+            - generic [ref=e146]:
+              - generic [ref=e147]:
+                - generic [ref=e148]: Chef's pick
+                - generic [ref=e149]: Hot
+              - heading "Lamb Karahi" [level=3] [ref=e150]
+              - paragraph [ref=e151]: Slow-cooked lamb, peppers, ginger, coriander and deep warming spices.
+              - generic [ref=e152]:
+                - strong [ref=e153]: €17,95
+                - link "Order Lamb Karahi" [ref=e154] [cursor=pointer]:
+                  - /url: /order
+                  - text: Add
+          - article [ref=e155]:
+            - generic [ref=e157]: "4"
+            - generic [ref=e158]:
+              - generic [ref=e159]:
+                - generic [ref=e160]: Vegetarian
+                - generic [ref=e161]: Medium
+              - heading "Paneer Tikka Masala" [level=3] [ref=e162]
+              - paragraph [ref=e163]: Grilled paneer in a silky masala sauce with fresh fenugreek.
+              - generic [ref=e164]:
+                - strong [ref=e165]: €14,50
+                - link "Order Paneer Tikka Masala" [ref=e166] [cursor=pointer]:
+                  - /url: /order
+                  - text: Add
+    - region "Browse by craving" [ref=e167]:
+      - generic [ref=e168]:
+        - generic [ref=e169]:
+          - generic [ref=e170]: Menu preview
+          - heading "Browse by craving" [level=2] [ref=e171]
+          - paragraph [ref=e172]: Category-first browsing keeps the menu easy to scan on mobile and reduces choice overload before checkout.
+          - link "Open menu" [ref=e173] [cursor=pointer]:
+            - /url: /menu
+            - text: Open menu
+            - img [ref=e174]
+        - generic [ref=e176]:
+          - link "Biryani 8 dishes" [ref=e177] [cursor=pointer]:
+            - /url: /menu
+            - img [ref=e178]
+            - generic [ref=e180]:
+              - strong [ref=e181]: Biryani
+              - generic [ref=e182]: 8 dishes
+            - img [ref=e183]
+          - link "Curries 16 dishes" [ref=e185] [cursor=pointer]:
+            - /url: /menu
+            - img [ref=e186]
+            - generic [ref=e189]:
+              - strong [ref=e190]: Curries
+              - generic [ref=e191]: 16 dishes
+            - img [ref=e192]
+          - link "Tandoori Grill 7 dishes" [ref=e194] [cursor=pointer]:
+            - /url: /menu
+            - img [ref=e195]
+            - generic [ref=e197]:
+              - strong [ref=e198]: Tandoori Grill
+              - generic [ref=e199]: 7 dishes
+            - img [ref=e200]
+          - link "Vegetarian 12 dishes" [ref=e202] [cursor=pointer]:
+            - /url: /menu
+            - img [ref=e203]
+            - generic [ref=e206]:
+              - strong [ref=e207]: Vegetarian
+              - generic [ref=e208]: 12 dishes
+            - img [ref=e209]
+          - link "Naan & Rice 10 sides" [ref=e211] [cursor=pointer]:
+            - /url: /menu
+            - img [ref=e212]
+            - generic [ref=e215]:
+              - strong [ref=e216]: Naan & Rice
+              - generic [ref=e217]: 10 sides
+            - img [ref=e218]
+          - link "Desserts & Drinks 14 items" [ref=e220] [cursor=pointer]:
+            - /url: /menu
+            - img [ref=e221]
+            - generic [ref=e225]:
+              - strong [ref=e226]: Desserts & Drinks
+              - generic [ref=e227]: 14 items
+            - img [ref=e228]
+    - region "A clearer path for dine-in guests" [ref=e230]:
+      - generic [ref=e231]:
+        - generic [ref=e232]:
+          - generic [ref=e233]: Buffet & reservations
+          - heading "A clearer path for dine-in guests" [level=2] [ref=e234]
+          - paragraph [ref=e235]: Buffet visitors need time slots, guest count and confirmation quickly. This section separates dine-in intent from delivery.
+          - generic "Buffet time slots" [ref=e236]:
+            - generic [ref=e237]: 17:30-19:30
+            - generic [ref=e238]: 19:30-22:00
+          - link "Reserve table" [ref=e239] [cursor=pointer]:
+            - /url: /reserve
+            - text: Reserve table
+            - img [ref=e240]
+        - generic "Restaurant confidence details" [ref=e242]:
+          - article [ref=e243]:
+            - img [ref=e244]
+            - strong [ref=e247]: Daily service
+            - generic [ref=e248]: 14:00-22:00 listed opening hours
+          - article [ref=e249]:
+            - img [ref=e250]
+            - strong [ref=e253]: Dordrecht local
+            - generic [ref=e254]: Delivery, pickup and reservations from one place
+          - article [ref=e255]:
+            - img [ref=e256]
+            - strong [ref=e259]: Direct confirmation
+            - generic [ref=e260]: Lower uncertainty before customers arrive
+    - region "Trust signals that support first orders" [ref=e261]:
+      - generic [ref=e262]:
+        - generic [ref=e263]:
+          - generic [ref=e264]: Local proof
+          - heading "Trust signals that support first orders" [level=2] [ref=e265]
+          - paragraph [ref=e266]: Reviews are placed before operational details so new customers can commit faster.
+        - generic [ref=e267]:
+          - figure "Nadia Delivery order" [ref=e268]:
+            - generic "5 out of 5 stars" [ref=e269]:
+              - img [ref=e270]
+              - img [ref=e272]
+              - img [ref=e274]
+              - img [ref=e276]
+              - img [ref=e278]
+            - blockquote [ref=e280]: The biryani tasted fresh, generous and properly spiced. Ordering direct was faster than using a marketplace app.
+            - generic [ref=e281]:
+              - strong [ref=e282]: Nadia
+              - generic [ref=e283]: Delivery order
+          - figure "Arjan Buffet reservation" [ref=e284]:
+            - generic "5 out of 5 stars" [ref=e285]:
+              - img [ref=e286]
+              - img [ref=e288]
+              - img [ref=e290]
+              - img [ref=e292]
+              - img [ref=e294]
+            - blockquote [ref=e296]: Great buffet evening with clear time slots and friendly service. The grill and curries were the highlight.
+            - generic [ref=e297]:
+              - strong [ref=e298]: Arjan
+              - generic [ref=e299]: Buffet reservation
+          - figure "Priya Pickup order" [ref=e300]:
+            - generic "5 out of 5 stars" [ref=e301]:
+              - img [ref=e302]
+              - img [ref=e304]
+              - img [ref=e306]
+              - img [ref=e308]
+              - img [ref=e310]
+            - blockquote [ref=e312]: Reliable pickup timing and careful packaging. The butter chicken and garlic naan arrived hot.
+            - generic [ref=e313]:
+              - strong [ref=e314]: Priya
+              - generic [ref=e315]: Pickup order
+    - region "Know timing, fee and availability before checkout" [ref=e316]:
+      - generic [ref=e317]:
+        - generic [ref=e318]:
+          - generic [ref=e319]: Delivery information
+          - heading "Know timing, fee and availability before checkout" [level=2] [ref=e320]
+          - paragraph [ref=e321]: "The homepage makes operational clarity visible early: delivery estimates, pickup timing, minimum order progress and a direct phone fallback."
+        - generic [ref=e322]:
+          - generic [ref=e323]:
+            - term [ref=e324]: Delivery estimate
+            - definition [ref=e325]: 35-45 minutes during normal service
+          - generic [ref=e326]:
+            - term [ref=e327]: Pickup estimate
+            - definition [ref=e328]: 20-30 minutes after restaurant acceptance
+          - generic [ref=e329]:
+            - term [ref=e330]: Questions
+            - definition [ref=e331]:
+              - link "Call +31 78 785 1017" [ref=e332] [cursor=pointer]:
+                - /url: tel:+31787851017
+    - region "Answers before customers hesitate" [ref=e333]:
+      - generic [ref=e334]:
+        - generic [ref=e335]:
+          - generic [ref=e336]: FAQ
+          - heading "Answers before customers hesitate" [level=2] [ref=e337]
+        - generic [ref=e338]:
+          - group [ref=e339]:
+            - generic "What are the opening hours? +" [ref=e340] [cursor=pointer]
+          - group [ref=e341]:
+            - generic "Can I order delivery and pickup? +" [ref=e342] [cursor=pointer]
+          - group [ref=e343]:
+            - generic "Do you offer buffet reservations? +" [ref=e344] [cursor=pointer]
+          - group [ref=e345]:
+            - generic "Can I add allergy notes? +" [ref=e346] [cursor=pointer]
+  - contentinfo [ref=e347]:
+    - generic [ref=e348]:
+      - generic [ref=e349]:
+        - link "BH Biryani House Dordrecht" [ref=e350] [cursor=pointer]:
+          - /url: /
+          - generic [ref=e351]: BH
+          - generic [ref=e352]:
+            - strong [ref=e353]: Biryani House
+            - generic [ref=e354]: Dordrecht
+        - paragraph [ref=e355]: Authentic Indian delivery, pickup, buffet and catering in Dordrecht.
+      - navigation "Footer navigation" [ref=e356]:
+        - link "Menu" [ref=e357] [cursor=pointer]:
+          - /url: /menu
+        - link "Order online" [ref=e358] [cursor=pointer]:
+          - /url: /order
+        - link "Reserve" [ref=e359] [cursor=pointer]:
+          - /url: /reserve
+        - link "Catering" [ref=e360] [cursor=pointer]:
+          - /url: /catering
+      - generic [ref=e361]:
+        - strong [ref=e362]: Contact
+        - link "+31 78 785 1017" [ref=e363] [cursor=pointer]:
+          - /url: tel:+31787851017
+        - link "info@biryanihousedordrecht.com" [ref=e364] [cursor=pointer]:
+          - /url: mailto:info@biryanihousedordrecht.com
