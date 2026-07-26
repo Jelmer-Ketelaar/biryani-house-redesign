@@ -31,17 +31,26 @@ def run() -> None:
             location.phone = "+31 6 41685055"
             location.email = "hello@biryanihousedordrecht.com"
 
-        existing_slugs = set(db.scalars(select(MenuItem.slug).where(MenuItem.location_id == location.id)))
+        existing_items = {
+            item.slug: item
+            for item in db.scalars(select(MenuItem).where(MenuItem.location_id == location.id))
+        }
         for catalog_item in ITEMS:
-            if catalog_item["slug"] not in existing_slugs:
+            existing_item = existing_items.get(catalog_item["slug"])
+            price = Decimal(catalog_item["basePriceCents"]) / 100
+            if existing_item is None:
                 db.add(
                     MenuItem(
                         location_id=location.id,
                         slug=catalog_item["slug"],
                         name=catalog_item["name"],
-                        price=Decimal(catalog_item["basePriceCents"]) / 100,
+                        price=price,
                     )
                 )
+            else:
+                existing_item.name = catalog_item["name"]
+                existing_item.price = price
+                existing_item.active = True
 
         if db.scalar(select(User).where(User.email == "admin@example.com")) is None:
             db.add(

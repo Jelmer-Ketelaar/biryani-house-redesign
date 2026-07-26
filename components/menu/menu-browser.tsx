@@ -20,6 +20,7 @@ import Link from "next/link";
 import type * as React from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 
+import { MenuCategorySection } from "@/components/menu/menu-category-section";
 import { Button } from "@/components/ui/button";
 import { formatEuro, spiceLabel } from "@/lib/menu/format";
 import type { DietaryLabel, MenuItem, MenuResponse } from "@/lib/menu/types";
@@ -57,7 +58,7 @@ export function MenuBrowser({ initialMenu }: { initialMenu: MenuResponse }) {
 
         if (category !== "all" && item.categorySlug !== category) return false;
         if (popularOnly && !item.isPopular) return false;
-        if (item.spiceLevel > maxSpice) return false;
+        if (item.spiceLevel !== null && item.spiceLevel > maxSpice) return false;
         if (dietary.length > 0 && !dietary.every((label) => item.dietaryLabels.includes(label))) {
           return false;
         }
@@ -76,6 +77,7 @@ export function MenuBrowser({ initialMenu }: { initialMenu: MenuResponse }) {
 
   const cartItemCount = cartItems.reduce((sum, line) => sum + line.quantity, 0);
   const cartTotal = cartItems.reduce((sum, line) => sum + line.unitPriceCents * line.quantity, 0);
+  const hasSpiceData = initialMenu.items.some((item) => item.spiceLevel !== null);
   const selectedAddonsTotal = selectedItem
     ? selectedAddons.reduce((sum, slug) => {
         const addon = selectedItem.addons.find((candidate) => candidate.slug === slug);
@@ -246,21 +248,23 @@ export function MenuBrowser({ initialMenu }: { initialMenu: MenuResponse }) {
               )}
             </button>
 
-            <label className="mt-5 block text-sm font-black">
-              Maximum spice
-              <span className="text-[#f8e6c8]/64 mt-1 block text-sm font-semibold">
-                {spiceLabel(maxSpice)}
-              </span>
-              <input
-                className="mt-3 w-full accent-[#d99a2b]"
-                aria-label="Maximum spice level"
-                max={3}
-                min={0}
-                type="range"
-                value={maxSpice}
-                onChange={(event) => setMaxSpice(Number(event.target.value))}
-              />
-            </label>
+            {hasSpiceData ? (
+              <label className="mt-5 block text-sm font-black">
+                Maximum spice
+                <span className="text-[#f8e6c8]/64 mt-1 block text-sm font-semibold">
+                  {spiceLabel(maxSpice)}
+                </span>
+                <input
+                  className="mt-3 w-full accent-[#d99a2b]"
+                  aria-label="Maximum spice level"
+                  max={3}
+                  min={0}
+                  type="range"
+                  value={maxSpice}
+                  onChange={(event) => setMaxSpice(Number(event.target.value))}
+                />
+              </label>
+            ) : null}
 
             <div className="mt-5">
               <p className="text-sm font-black">Dietary</p>
@@ -325,21 +329,12 @@ export function MenuBrowser({ initialMenu }: { initialMenu: MenuResponse }) {
 
           {groupedItems.length > 0 ? (
             groupedItems.map((group) => (
-              <section key={group.category.slug} className="scroll-mt-40 space-y-4">
-                <div>
-                  <h3 className="text-xl font-black text-[#fff7e8] sm:text-2xl">
-                    {group.category.name}
-                  </h3>
-                  <p className="text-[#f8e6c8]/64 mt-1 max-w-2xl text-sm leading-6">
-                    {group.category.description}
-                  </p>
-                </div>
-                <div className="grid gap-4 xl:grid-cols-2">
-                  {group.items.map((item) => (
-                    <MenuItemCard key={item.slug} item={item} onOpen={() => openItem(item)} />
-                  ))}
-                </div>
-              </section>
+              <MenuCategorySection
+                key={group.category.slug}
+                category={group.category}
+                items={group.items}
+                onOpenItem={openItem}
+              />
             ))
           ) : (
             <div className="border-white/14 rounded-3xl border border-dashed bg-white/[0.06] p-8 text-center">
@@ -380,10 +375,16 @@ export function MenuBrowser({ initialMenu }: { initialMenu: MenuResponse }) {
             <h2 id="customizer-title" className="pr-12 text-2xl font-black">
               {selectedItem.name}
             </h2>
-            <p className="text-[#f8e6c8]/68 mt-2 pr-8 leading-7">{selectedItem.description}</p>
+            {selectedItem.description ? (
+              <p className="text-[#f8e6c8]/68 mt-2 pr-8 leading-7">{selectedItem.description}</p>
+            ) : null}
             <div className="mt-4 flex flex-wrap gap-2">
-              <Badge icon={Timer}>{selectedItem.prepTimeMinutes} min</Badge>
-              <Badge icon={Flame}>{spiceLabel(selectedItem.spiceLevel)}</Badge>
+              {selectedItem.prepTimeMinutes !== null ? (
+                <Badge icon={Timer}>{selectedItem.prepTimeMinutes} min</Badge>
+              ) : null}
+              {selectedItem.spiceLevel !== null ? (
+                <Badge icon={Flame}>{spiceLabel(selectedItem.spiceLevel)}</Badge>
+              ) : null}
               {selectedItem.dietaryLabels.map((label) => (
                 <Badge key={label} icon={Leaf}>
                   {dietaryCopy[label]}
@@ -486,49 +487,6 @@ export function MenuBrowser({ initialMenu }: { initialMenu: MenuResponse }) {
         </dialog>
       ) : null}
     </main>
-  );
-}
-
-function MenuItemCard({ item, onOpen }: { item: MenuItem; onOpen: () => void }) {
-  return (
-    <article className="group rounded-3xl border border-white/10 bg-white/[0.06] p-4 shadow-[0_20px_70px_rgba(0,0,0,0.18)] transition duration-200 hover:-translate-y-1 hover:border-[#d99a2b]/40">
-      <div className="flex items-start justify-between gap-4">
-        <div className="min-w-0">
-          <div className="flex flex-wrap items-center gap-2">
-            <h3 className="text-lg font-black text-[#fff7e8]">{item.name}</h3>
-            {item.isPopular ? (
-              <span className="inline-flex items-center gap-1 rounded-full bg-[#d99a2b] px-2 py-1 text-xs font-black text-[#1a100b]">
-                <Star className="h-3 w-3 fill-[#1a100b] text-[#1a100b]" />
-                Popular
-              </span>
-            ) : null}
-          </div>
-          <p className="text-[#f8e6c8]/64 mt-2 line-clamp-2 text-sm leading-6">
-            {item.description}
-          </p>
-        </div>
-        <span className="shrink-0 text-lg font-black text-[#f2c46e]">
-          {formatEuro(item.basePriceCents)}
-        </span>
-      </div>
-      <div className="mt-4 flex flex-wrap gap-2">
-        <Badge icon={Timer}>{item.prepTimeMinutes} min</Badge>
-        <Badge icon={Flame}>{spiceLabel(item.spiceLevel)}</Badge>
-        {item.dietaryLabels.slice(0, 3).map((label) => (
-          <Badge key={label} icon={Leaf}>
-            {dietaryCopy[label]}
-          </Badge>
-        ))}
-      </div>
-      <Button
-        className="mt-5 w-full bg-[#d99a2b] text-[#1a100b] hover:bg-[#efb44c]"
-        disabled={item.status !== "AVAILABLE"}
-        onClick={onOpen}
-      >
-        <Plus className="h-4 w-4" />
-        {item.status === "AVAILABLE" ? "Customize" : "Sold out"}
-      </Button>
-    </article>
   );
 }
 

@@ -55,11 +55,11 @@ export type MenuItem = {
   basePriceCents: number;
   imageUrl?: string;
   status: MenuItemStatus;
-  spiceLevel: number;
+  spiceLevel: number | null;
   dietaryLabels: DietaryLabel[];
   allergenTags: string[];
   isPopular: boolean;
-  prepTimeMinutes: number;
+  prepTimeMinutes: number | null;
   sortOrder: number;
   modifierGroups: ModifierGroup[];
   addons: MenuAddon[];

@@ -43,23 +43,23 @@ const signatureDishes = [
     href: "/menu"
   },
   {
-    name: "Tandoori Mix Grill",
-    description: "Smoky tikka, kebab, charred vegetables and cooling mint chutney.",
+    name: "Mix Grill",
+    description: "Chicken tikka, tandoori chicken and chicken and lamb seekh kabab.",
     badge: "Charcoal favorite",
     spice: 3,
     href: "/menu"
   },
   {
-    name: "Chana Masala",
-    description: "Chickpeas simmered with tomato, ginger, coriander and roasted spices.",
-    badge: "Vegan favorite",
+    name: "Veg Biryani",
+    description: "Basmati rice with fresh vegetables, raita and a spicy sauce.",
+    badge: "Vegetarian favorite",
     spice: 2,
     href: "/menu"
   },
   {
-    name: "Garlic Naan",
-    description: "Fresh tandoor naan with garlic butter and coriander.",
-    badge: "Fresh from the tandoor",
+    name: "Garlic Bread",
+    description: "Warm garlic bread served as a side or a quick lunch favorite.",
+    badge: "Popular side",
     spice: 0,
     href: "/menu"
   },
@@ -72,7 +72,7 @@ const signatureDishes = [
   }
 ];
 
-const menuFilters = ["Biryani", "Curries", "Tandoori", "Vegetarian", "Naan & sides"];
+const menuFilters = ["Biryani", "Curries", "BBQ grill", "Vegetarian", "Starters & sides"];
 
 const guestReasons = [
   {

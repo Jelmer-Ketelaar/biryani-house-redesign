@@ -87,3 +87,34 @@ def test_order_rejects_past_schedule() -> None:
 
     assert response.status_code == 400
     assert response.json()["error"]["message"] == "Request validation failed"
+
+
+def test_order_can_be_placed_and_retried_safely() -> None:
+    payload = {
+        "serviceType": "TAKEAWAY",
+        "customer": {
+            "name": "Test Guest",
+            "email": "successful-order@example.com",
+            "phone": "+31612345678",
+        },
+        "items": [
+            {
+                "itemSlug": "chicken-biryani",
+                "quantity": 2,
+                "addonSlugs": ["garlic-bread-addon"],
+            }
+        ],
+    }
+    headers = {"Idempotency-Key": "successful-order-test"}
+
+    response = client.post("/api/orders", json=payload, headers=headers)
+    assert response.status_code == 201
+    order = response.json()
+    assert order["orderNumber"].startswith("BH-")
+    assert order["status"] == "RECEIVED"
+    assert order["totalCents"] == 4197
+    assert order["pos"]["status"] == "QUEUED"
+
+    retry = client.post("/api/orders", json=payload, headers=headers)
+    assert retry.status_code == 201
+    assert retry.json()["orderId"] == order["orderId"]

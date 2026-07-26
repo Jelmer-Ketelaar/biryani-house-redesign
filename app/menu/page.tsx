@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { MenuBrowser } from "@/components/menu/menu-browser";
+import { MenuJsonLd } from "@/components/seo/menu-json-ld";
 import { getMenu } from "@/lib/menu/service";
 
 export const metadata: Metadata = {
@@ -15,5 +16,10 @@ export const dynamic = "force-dynamic";
 export default async function MenuPage() {
   const menu = await getMenu({ includeUnavailable: true });
 
-  return <MenuBrowser initialMenu={menu} />;
+  return (
+    <>
+      <MenuJsonLd menu={menu} />
+      <MenuBrowser initialMenu={menu} />
+    </>
+  );
 }

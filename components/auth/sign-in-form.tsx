@@ -7,8 +7,17 @@ import { Loader2, LockKeyhole, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
 
-export function SignInForm({ redirectTo = "/account" }: { redirectTo?: string }) {
+export function SignInForm({
+  redirectTo = "/account",
+  showHelperText = true,
+  tone = "light"
+}: {
+  redirectTo?: string;
+  showHelperText?: boolean;
+  tone?: "light" | "dark";
+}) {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -49,45 +58,85 @@ export function SignInForm({ redirectTo = "/account" }: { redirectTo?: string })
   return (
     <form className="space-y-5" onSubmit={submit}>
       <div className="space-y-2">
-        <Label htmlFor="email">Email</Label>
+        <Label htmlFor="email" className={tone === "dark" ? "text-[#fff7e8]" : undefined}>
+          Email
+        </Label>
         <div className="relative">
-          <Mail className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Mail
+            className={cn(
+              "absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2",
+              tone === "dark" ? "text-[#f8e6c8]/50" : "text-muted-foreground"
+            )}
+          />
           <Input
             id="email"
             name="email"
             type="email"
             autoComplete="email"
-            className="pl-11"
+            className={cn(
+              "pl-11",
+              tone === "dark" &&
+                "border-white/15 bg-white/[0.07] text-[#fff7e8] shadow-none placeholder:text-[#f8e6c8]/35 focus:border-[#d99a2b]/60 focus:ring-[#d99a2b]/25 focus:ring-offset-[#120c09]"
+            )}
             required
           />
         </div>
       </div>
       <div className="space-y-2">
-        <Label htmlFor="password">Password</Label>
+        <Label htmlFor="password" className={tone === "dark" ? "text-[#fff7e8]" : undefined}>
+          Password
+        </Label>
         <div className="relative">
-          <LockKeyhole className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <LockKeyhole
+            className={cn(
+              "absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2",
+              tone === "dark" ? "text-[#f8e6c8]/50" : "text-muted-foreground"
+            )}
+          />
           <Input
             id="password"
             name="password"
             type="password"
             autoComplete="current-password"
-            className="pl-11"
+            className={cn(
+              "pl-11",
+              tone === "dark" &&
+                "border-white/15 bg-white/[0.07] text-[#fff7e8] shadow-none placeholder:text-[#f8e6c8]/35 focus:border-[#d99a2b]/60 focus:ring-[#d99a2b]/25 focus:ring-offset-[#120c09]"
+            )}
             required
           />
         </div>
       </div>
       {error ? (
-        <p role="alert" className="text-sm font-bold text-destructive">
+        <p
+          role="alert"
+          className={cn("text-sm font-bold", tone === "dark" ? "text-red-300" : "text-destructive")}
+        >
           {error}
         </p>
       ) : null}
-      <Button className="w-full" size="lg" type="submit" disabled={submitting}>
+      <Button
+        className={cn(
+          "w-full",
+          tone === "dark" && "bg-[#d99a2b] text-[#1a100b] hover:bg-[#efb44c]"
+        )}
+        size="lg"
+        type="submit"
+        disabled={submitting}
+      >
         {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
         Sign in
       </Button>
-      <p className="text-center text-sm leading-6 text-muted-foreground">
-        Sign in to access your restaurant account.
-      </p>
+      {showHelperText ? (
+        <p
+          className={cn(
+            "text-center text-sm leading-6",
+            tone === "dark" ? "text-[#f8e6c8]/60" : "text-muted-foreground"
+          )}
+        >
+          Sign in to access your restaurant account.
+        </p>
+      ) : null}
     </form>
   );
 }

@@ -83,7 +83,7 @@ export const buffetDetails = [
   "All-you-can-eat Indian buffet excluding drinks",
   "Two convenient evening time slots",
   "Desi and Middle Eastern dishes in a cozy, family-friendly setting",
-  "Butter Chicken, Biryani, Garlic Naan, spicy curries, and grilled specialties"
+  "Butter Chicken, Biryani, Garlic Bread, spicy curries, and grilled specialties"
 ];
 
 export const galleryItems = [
