@@ -1,8 +1,12 @@
 node_modules
 .next
+.next-*
 coverage
 dist
 .env
 .env*.local
 postgres-data
 docs
+backend
+.obsolete-symfony
+.idea

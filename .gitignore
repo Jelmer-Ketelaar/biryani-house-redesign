@@ -1,8 +1,16 @@
 node_modules
 .next
+.next-*
 .env
 .env*.local
 coverage
 dist
 *.log
 postgres-data
+.obsolete-symfony/
+backend/.env
+backend/.venv/
+backend/**/__pycache__/
+backend/.pytest_cache/
+backend/.ruff_cache/
+.idea

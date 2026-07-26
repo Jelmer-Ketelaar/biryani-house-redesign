@@ -18,53 +18,97 @@ type AddCartItemInput = Omit<CartItem, "id"> & { id?: string };
 
 type CartState = {
   items: CartItem[];
+  hasHydrated: boolean;
+  markHydrated: () => void;
   addItem: (item: AddCartItemInput) => void;
   updateQuantity: (id: string, quantity: number) => void;
   removeItem: (id: string) => void;
   clear: () => void;
-  subtotalCents: () => number;
 };
+
+function isCartItem(value: unknown): value is CartItem {
+  if (!value || typeof value !== "object") return false;
+  const item = value as Partial<CartItem>;
+
+  return (
+    typeof item.id === "string" &&
+    typeof item.itemSlug === "string" &&
+    typeof item.name === "string" &&
+    Number.isInteger(item.unitPriceCents) &&
+    Number.isInteger(item.quantity) &&
+    (item.quantity ?? 0) >= 1 &&
+    (item.quantity ?? 0) <= 20 &&
+    Array.isArray(item.addonSlugs) &&
+    item.addonSlugs.every((slug) => typeof slug === "string") &&
+    Array.isArray(item.addonNames) &&
+    item.addonNames.every((name) => typeof name === "string")
+  );
+}
 
 export const useCartStore = create<CartState>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       items: [],
+      hasHydrated: false,
+      markHydrated: () => set({ hasHydrated: true }),
       addItem: (item) =>
-        set((state) => ({
-          items: [
-            ...state.items,
-            {
-              ...item,
-              id:
-                item.id ??
-                `${item.itemSlug}:${item.addonSlugs.sort().join(",")}:${Date.now().toString(36)}`
-            }
-          ]
-        })),
+        set((state) => {
+          const addonSlugs = [...item.addonSlugs].sort();
+          const existing = state.items.find(
+            (cartItem) =>
+              cartItem.itemSlug === item.itemSlug &&
+              [...cartItem.addonSlugs].sort().join(",") === addonSlugs.join(",") &&
+              cartItem.specialInstructions === item.specialInstructions
+          );
+
+          if (existing) {
+            return {
+              items: state.items.map((cartItem) =>
+                cartItem.id === existing.id
+                  ? { ...cartItem, quantity: Math.min(20, cartItem.quantity + item.quantity) }
+                  : cartItem
+              )
+            };
+          }
+
+          return {
+            items: [
+              ...state.items,
+              {
+                ...item,
+                addonSlugs,
+                id: item.id ?? `${item.itemSlug}:${addonSlugs.join(",")}:${Date.now().toString(36)}`
+              }
+            ]
+          };
+        }),
       updateQuantity: (id, quantity) =>
         set((state) => ({
-          items: state.items
-            .map((cartItem) =>
-              cartItem.id === id
-                ? {
-                    ...cartItem,
-                    quantity: Math.max(1, Math.min(20, quantity))
-                  }
-                : cartItem
-            )
-            .filter((cartItem) => cartItem.quantity > 0)
+          items:
+            quantity <= 0
+              ? state.items.filter((cartItem) => cartItem.id !== id)
+              : state.items.map((cartItem) =>
+                  cartItem.id === id ? { ...cartItem, quantity: Math.min(20, quantity) } : cartItem
+                )
         })),
       removeItem: (id) =>
         set((state) => ({
           items: state.items.filter((item) => item.id !== id)
         })),
-      clear: () => set({ items: [] }),
-      subtotalCents: () =>
-        get().items.reduce((sum, item) => sum + item.unitPriceCents * item.quantity, 0)
+      clear: () => set({ items: [] })
     }),
     {
       name: "biryani-house-cart",
-      partialize: (state) => ({ items: state.items })
+      version: 1,
+      skipHydration: true,
+      partialize: (state) => ({ items: state.items }),
+      merge: (persistedState, currentState) => {
+        const saved = persistedState as Partial<Pick<CartState, "items">>;
+        return {
+          ...currentState,
+          items: Array.isArray(saved?.items) ? saved.items.filter(isCartItem) : []
+        };
+      }
     }
   )
 );

@@ -9,6 +9,8 @@ export function SiteJsonLd() {
     url: "https://biryanihousedordrecht.com/",
     telephone: restaurant.phone,
     email: restaurant.email,
+    image: "https://biryanihousedordrecht.com/images/biryani-hero.png",
+    priceRange: "€€",
     address: {
       "@type": "PostalAddress",
       streetAddress: restaurant.streetAddress,
@@ -16,7 +18,14 @@ export function SiteJsonLd() {
       addressLocality: restaurant.locality,
       addressCountry: restaurant.country
     },
-    openingHours: "Mo-Su 14:00-22:00",
+    openingHoursSpecification: [
+      {
+        "@type": "OpeningHoursSpecification",
+        dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+        opens: "14:00",
+        closes: "22:00"
+      }
+    ],
     acceptsReservations: true,
     hasMenu: "https://biryanihousedordrecht.com/menu"
   };

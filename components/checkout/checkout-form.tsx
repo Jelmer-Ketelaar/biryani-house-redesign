@@ -1,11 +1,12 @@
 "use client";
 
 import type { FormEvent } from "react";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, CheckCircle2, Loader2, Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { PageLoading } from "@/components/ui/page-loading";
 import { formatEuro } from "@/lib/menu/format";
 import { useCartStore } from "@/lib/stores/cart-store";
 import { cn } from "@/lib/utils";
@@ -34,7 +35,6 @@ type FormState = {
   houseNumber: string;
   postalCode: string;
   city: string;
-  promotionCode: string;
 };
 
 const initialForm: FormState = {
@@ -46,12 +46,12 @@ const initialForm: FormState = {
   street: "",
   houseNumber: "",
   postalCode: "",
-  city: "Dordrecht",
-  promotionCode: ""
+  city: "Dordrecht"
 };
 
 export function CheckoutForm() {
   const items = useCartStore((state) => state.items);
+  const hasHydrated = useCartStore((state) => state.hasHydrated);
   const updateQuantity = useCartStore((state) => state.updateQuantity);
   const removeItem = useCartStore((state) => state.removeItem);
   const clear = useCartStore((state) => state.clear);
@@ -59,6 +59,7 @@ export function CheckoutForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [order, setOrder] = useState<OrderResponse | null>(null);
+  const idempotencyKey = useRef<string | null>(null);
 
   const subtotalCents = useMemo(
     () => items.reduce((sum, item) => sum + item.unitPriceCents * item.quantity, 0),
@@ -67,6 +68,11 @@ export function CheckoutForm() {
   const serviceFeeCents = subtotalCents > 0 ? 99 : 0;
   const deliveryFeeCents = form.serviceType === "DELIVERY" ? 250 : 0;
   const totalCents = subtotalCents + serviceFeeCents + deliveryFeeCents;
+  const minimumScheduleTime = useMemo(() => {
+    const now = new Date();
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+    return now.toISOString().slice(0, 16);
+  }, []);
 
   async function submitOrder(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -76,15 +82,21 @@ export function CheckoutForm() {
       setError("Add at least one dish before checkout.");
       return;
     }
+    if (form.scheduledFor && new Date(form.scheduledFor) < new Date()) {
+      setError("Choose a future order time or leave the schedule field empty.");
+      return;
+    }
 
     setIsSubmitting(true);
     try {
+      idempotencyKey.current ??= crypto.randomUUID();
       const response = await fetch("/api/orders", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Idempotency-Key": crypto.randomUUID()
+          "Idempotency-Key": idempotencyKey.current
         },
+        signal: AbortSignal.timeout(15_000),
         body: JSON.stringify({
           serviceType: form.serviceType,
           scheduledFor: form.scheduledFor ? new Date(form.scheduledFor).toISOString() : undefined,
@@ -107,12 +119,13 @@ export function CheckoutForm() {
             quantity: item.quantity,
             addonSlugs: item.addonSlugs,
             notes: item.specialInstructions
-          })),
-          promotionCode: form.promotionCode || undefined
+          }))
         })
       });
 
-      const payload = await response.json();
+      const payload = await response.json().catch(() => ({
+        error: { message: "The ordering service returned an invalid response." }
+      }));
       if (!response.ok) {
         throw new Error(payload?.error?.message ?? "We could not place the order.");
       }
@@ -120,10 +133,20 @@ export function CheckoutForm() {
       setOrder(payload);
       clear();
     } catch (caughtError) {
-      setError(caughtError instanceof Error ? caughtError.message : "We could not place the order.");
+      setError(
+        caughtError instanceof DOMException && caughtError.name === "TimeoutError"
+          ? "The ordering service took too long to respond. Check your connection and try again."
+          : caughtError instanceof Error
+            ? caughtError.message
+            : "We could not place the order."
+      );
     } finally {
       setIsSubmitting(false);
     }
+  }
+
+  if (!hasHydrated) {
+    return <PageLoading label="Loading your basket" />;
   }
 
   if (order) {
@@ -132,15 +155,17 @@ export function CheckoutForm() {
         <section className="w-full max-w-2xl rounded-3xl border border-border/70 bg-card p-6 text-center shadow-sm sm:p-8">
           <CheckCircle2 className="mx-auto h-12 w-12 text-primary" />
           <p className="eyebrow mt-5">Order received</p>
-          <h1 className="mt-2 text-3xl font-black">Thanks, your order is in the kitchen queue.</h1>
+          <h1 className="mt-2 text-3xl font-black">Thanks, we received your order.</h1>
           <p className="mt-3 text-muted-foreground">
-            Order {order.orderNumber} is {order.status.toLowerCase().replaceAll("_", " ")}. Staff
-            can now process the POS submission job.
+            Keep order number <strong>{order.orderNumber}</strong> for your records. Its current
+            status is {order.status.toLowerCase().replaceAll("_", " ")}.
           </p>
           <div className="mt-6 rounded-2xl bg-background p-4 text-left">
             <p className="text-sm font-bold text-muted-foreground">Total</p>
             <p className="text-2xl font-black">{formatEuro(order.totalCents)}</p>
-            <p className="mt-2 text-sm text-muted-foreground">POS status: {order.pos.status}</p>
+            <p className="mt-2 text-sm text-muted-foreground">
+              The restaurant will contact you if it needs to clarify any details.
+            </p>
           </div>
           <Button asChild className="mt-6">
             <Link href="/menu">Order again</Link>
@@ -162,8 +187,8 @@ export function CheckoutForm() {
           </Button>
           <h1 className="mt-4 text-4xl font-black">Checkout</h1>
           <p className="mt-2 max-w-2xl text-muted-foreground">
-            Choose delivery or takeaway, confirm your details, and submit the order to Biryani
-            House Dordrecht.
+            Choose delivery or takeaway, confirm your details, and submit the order to Biryani House
+            Dordrecht.
           </p>
         </div>
       </section>
@@ -198,9 +223,10 @@ export function CheckoutForm() {
               ))}
             </div>
             <label className="mt-4 block text-sm font-bold">
-              Schedule time
+              Schedule time <span className="font-normal text-muted-foreground">(optional)</span>
               <input
                 type="datetime-local"
+                min={minimumScheduleTime}
                 className="mt-2 min-h-12 w-full rounded-2xl border border-input bg-background px-4 outline-none focus:ring-2 focus:ring-ring"
                 value={form.scheduledFor}
                 onChange={(event) =>
@@ -213,9 +239,33 @@ export function CheckoutForm() {
           <section className="rounded-3xl border border-border/70 bg-card p-5 shadow-sm">
             <h2 className="text-xl font-black">Contact details</h2>
             <div className="mt-4 grid gap-4 sm:grid-cols-2">
-              <TextField label="Name" value={form.name} required onChange={(name) => setForm((current) => ({ ...current, name }))} />
-              <TextField label="Phone" value={form.phone} required onChange={(phone) => setForm((current) => ({ ...current, phone }))} />
-              <TextField label="Email" type="email" value={form.email} required className="sm:col-span-2" onChange={(email) => setForm((current) => ({ ...current, email }))} />
+              <TextField
+                label="Name"
+                value={form.name}
+                required
+                autoComplete="name"
+                minLength={2}
+                onChange={(name) => setForm((current) => ({ ...current, name }))}
+              />
+              <TextField
+                label="Phone"
+                type="tel"
+                value={form.phone}
+                required
+                autoComplete="tel"
+                inputMode="tel"
+                minLength={8}
+                onChange={(phone) => setForm((current) => ({ ...current, phone }))}
+              />
+              <TextField
+                label="Email"
+                type="email"
+                value={form.email}
+                required
+                autoComplete="email"
+                className="sm:col-span-2"
+                onChange={(email) => setForm((current) => ({ ...current, email }))}
+              />
             </div>
           </section>
 
@@ -223,10 +273,36 @@ export function CheckoutForm() {
             <section className="rounded-3xl border border-border/70 bg-card p-5 shadow-sm">
               <h2 className="text-xl font-black">Delivery address</h2>
               <div className="mt-4 grid gap-4 sm:grid-cols-[1fr_120px]">
-                <TextField label="Street" value={form.street} required onChange={(street) => setForm((current) => ({ ...current, street }))} />
-                <TextField label="No." value={form.houseNumber} required onChange={(houseNumber) => setForm((current) => ({ ...current, houseNumber }))} />
-                <TextField label="Postcode" value={form.postalCode} required onChange={(postalCode) => setForm((current) => ({ ...current, postalCode }))} />
-                <TextField label="City" value={form.city} required onChange={(city) => setForm((current) => ({ ...current, city }))} />
+                <TextField
+                  label="Street"
+                  value={form.street}
+                  required
+                  autoComplete="street-address"
+                  onChange={(street) => setForm((current) => ({ ...current, street }))}
+                />
+                <TextField
+                  label="No."
+                  value={form.houseNumber}
+                  required
+                  autoComplete="address-line2"
+                  onChange={(houseNumber) => setForm((current) => ({ ...current, houseNumber }))}
+                />
+                <TextField
+                  label="Postcode"
+                  value={form.postalCode}
+                  required
+                  autoComplete="postal-code"
+                  inputMode="text"
+                  minLength={4}
+                  onChange={(postalCode) => setForm((current) => ({ ...current, postalCode }))}
+                />
+                <TextField
+                  label="City"
+                  value={form.city}
+                  required
+                  autoComplete="address-level2"
+                  onChange={(city) => setForm((current) => ({ ...current, city }))}
+                />
               </div>
             </section>
           ) : null}
@@ -257,19 +333,36 @@ export function CheckoutForm() {
                           </p>
                         ) : null}
                       </div>
-                      <p className="font-black">{formatEuro(item.unitPriceCents * item.quantity)}</p>
+                      <p className="font-black">
+                        {formatEuro(item.unitPriceCents * item.quantity)}
+                      </p>
                     </div>
                     <div className="mt-3 flex items-center justify-between">
                       <div className="flex items-center rounded-full border border-border bg-card p-1">
-                        <button type="button" className="grid h-8 w-8 place-items-center" aria-label="Decrease quantity" onClick={() => updateQuantity(item.id, item.quantity - 1)}>
+                        <button
+                          type="button"
+                          className="grid h-8 w-8 place-items-center"
+                          aria-label="Decrease quantity"
+                          onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                        >
                           <Minus className="h-3.5 w-3.5" />
                         </button>
                         <span className="w-8 text-center text-sm font-black">{item.quantity}</span>
-                        <button type="button" className="grid h-8 w-8 place-items-center" aria-label="Increase quantity" onClick={() => updateQuantity(item.id, item.quantity + 1)}>
+                        <button
+                          type="button"
+                          className="grid h-8 w-8 place-items-center"
+                          aria-label="Increase quantity"
+                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                        >
                           <Plus className="h-3.5 w-3.5" />
                         </button>
                       </div>
-                      <button type="button" className="text-muted-foreground hover:text-destructive" aria-label={`Remove ${item.name}`} onClick={() => removeItem(item.id)}>
+                      <button
+                        type="button"
+                        className="text-muted-foreground hover:text-destructive"
+                        aria-label={`Remove ${item.name}`}
+                        onClick={() => removeItem(item.id)}
+                      >
                         <Trash2 className="h-4 w-4" />
                       </button>
                     </div>
@@ -279,7 +372,9 @@ export function CheckoutForm() {
             ) : (
               <div className="mt-5 rounded-2xl border border-dashed border-border p-6 text-center">
                 <p className="font-black">Your basket is empty</p>
-                <p className="mt-2 text-sm text-muted-foreground">Add dishes from the menu first.</p>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  Add dishes from the menu first.
+                </p>
                 <Button asChild className="mt-4" variant="outline">
                   <Link href="/menu">Browse menu</Link>
                 </Button>
@@ -297,7 +392,10 @@ export function CheckoutForm() {
             </div>
 
             {error ? (
-              <p className="mt-4 rounded-2xl border border-destructive/30 bg-destructive/10 p-3 text-sm font-bold text-destructive">
+              <p
+                role="alert"
+                className="mt-4 rounded-2xl border border-destructive/30 bg-destructive/10 p-3 text-sm font-bold text-destructive"
+              >
                 {error}
               </p>
             ) : null}
@@ -319,7 +417,10 @@ function TextField({
   onChange,
   type = "text",
   required = false,
-  className
+  className,
+  autoComplete,
+  inputMode,
+  minLength
 }: {
   label: string;
   value: string;
@@ -327,6 +428,9 @@ function TextField({
   type?: string;
   required?: boolean;
   className?: string;
+  autoComplete?: string;
+  inputMode?: React.HTMLAttributes<HTMLInputElement>["inputMode"];
+  minLength?: number;
 }) {
   return (
     <label className={cn("block text-sm font-bold", className)}>
@@ -334,6 +438,9 @@ function TextField({
       <input
         type={type}
         required={required}
+        autoComplete={autoComplete}
+        inputMode={inputMode}
+        minLength={minLength}
         className="mt-2 min-h-12 w-full rounded-2xl border border-input bg-background px-4 outline-none focus:ring-2 focus:ring-ring"
         value={value}
         onChange={(event) => onChange(event.target.value)}

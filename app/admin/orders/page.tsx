@@ -1,14 +1,21 @@
 import { AlertTriangle, Clock3, ReceiptText, RefreshCw } from "lucide-react";
+import { redirect } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
-import { prisma } from "@/lib/db/prisma";
+import { backendFetch } from "@/lib/backend/client";
 import { formatEuro } from "@/lib/menu/format";
 import { cn } from "@/lib/utils";
+
+export const metadata = {
+  title: "Staff Orders",
+  robots: { index: false, follow: false }
+};
 
 export const dynamic = "force-dynamic";
 
 const statusCopy: Record<string, string> = {
   DRAFT: "Draft",
+  RECEIVED: "Received",
   PAYMENT_PENDING: "Payment pending",
   PAYMENT_AUTHORIZED: "Payment authorised",
   SUBMITTED_TO_POS: "Sent to POS",
@@ -22,22 +29,35 @@ const statusCopy: Record<string, string> = {
   FAILED: "Failed"
 };
 
+type AdminFeed = {
+  orders: Array<{
+    id: string;
+    orderNumber: string;
+    status: string;
+    serviceType: string;
+    totalCents: number;
+    createdAt: string;
+    customer: { name: string; phone: string; email: string };
+    items: Array<{
+      id: string;
+      name: string;
+      quantity: number;
+      unitPriceCents: number;
+      notes: string | null;
+    }>;
+  }>;
+  failedJobs: Array<{
+    id: string;
+    type: string;
+    status: string;
+    lastError: string | null;
+  }>;
+};
+
 export default async function AdminOrdersPage() {
-  const [orders, failedJobs] = await Promise.all([
-    prisma.order.findMany({
-      orderBy: { createdAt: "desc" },
-      take: 25,
-      include: {
-        customer: true,
-        items: true
-      }
-    }),
-    prisma.integrationJob.findMany({
-      where: { status: { in: ["FAILED", "DEAD_LETTERED"] } },
-      orderBy: { updatedAt: "desc" },
-      take: 10
-    })
-  ]);
+  const feed = await backendFetch<AdminFeed>("/api/admin/orders", {}, { allowUnauthorized: true });
+  if (!feed) redirect("/auth/sign-in?next=%2Fadmin%2Forders");
+  const { orders, failedJobs } = feed;
 
   return (
     <main className="min-h-screen bg-background">
@@ -85,13 +105,11 @@ export default async function AdminOrdersPage() {
                       {new Intl.DateTimeFormat("nl-NL", {
                         dateStyle: "medium",
                         timeStyle: "short"
-                      }).format(order.createdAt)}
+                      }).format(new Date(order.createdAt))}
                     </p>
                   </div>
                   <div className="text-left sm:text-right">
-                    <p className="text-2xl font-black">
-                      {formatEuro(Number(order.total) * 100)}
-                    </p>
+                    <p className="text-2xl font-black">{formatEuro(order.totalCents)}</p>
                     <p className="text-xs font-bold text-muted-foreground">
                       {order.items.length} line items
                     </p>
@@ -111,7 +129,7 @@ export default async function AdminOrdersPage() {
                         ) : null}
                       </span>
                       <span className="font-black">
-                        {formatEuro(Number(item.unitPrice) * 100 * item.quantity)}
+                        {formatEuro(item.unitPriceCents * item.quantity)}
                       </span>
                     </div>
                   ))}
@@ -140,7 +158,9 @@ export default async function AdminOrdersPage() {
                 {failedJobs.map((job) => (
                   <div key={job.id} className="rounded-2xl bg-destructive/10 p-3 text-sm">
                     <p className="font-black">{job.type}</p>
-                    <p className="mt-1 text-muted-foreground">{job.lastError ?? "No error detail"}</p>
+                    <p className="mt-1 text-muted-foreground">
+                      {job.lastError ?? "No error detail"}
+                    </p>
                   </div>
                 ))}
               </div>

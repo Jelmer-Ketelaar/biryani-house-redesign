@@ -64,38 +64,6 @@
     @apply border-border/70;
   }
 
-  .spice-field {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    overflow: hidden;
-  }
-
-  .spice-field span {
-    position: absolute;
-    left: calc((var(--i) * 7%) + 3%);
-    top: calc((var(--i) * 11%) % 88%);
-    width: 0.28rem;
-    height: 0.28rem;
-    border-radius: 999px;
-    background: rgb(217 154 43 / 0.62);
-    box-shadow: 0 0 22px rgb(217 154 43 / 0.52);
-    animation: spice-drift 8s ease-in-out infinite;
-    animation-delay: calc(var(--i) * -0.45s);
-  }
-
-  @keyframes spice-drift {
-    0%,
-    100% {
-      opacity: 0.18;
-      transform: translate3d(0, 0, 0) scale(0.7);
-    }
-    45% {
-      opacity: 0.78;
-      transform: translate3d(1.2rem, -3rem, 0) scale(1.15);
-    }
-  }
-
   @media (prefers-reduced-motion: reduce) {
     *,
     ::before,

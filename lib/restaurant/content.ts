@@ -13,7 +13,7 @@ import {
 export const restaurant = {
   name: "Biryani House Dordrecht",
   shortName: "Biryani House",
-  tagline: "Het Beste Indiase Restaurant in Dordrecht",
+  tagline: "Halal Indian & Pakistani food in Dordrecht",
   address: "Voorstraat 394, 3311 VP Dordrecht, Netherlands",
   streetAddress: "Voorstraat 394",
   locality: "Dordrecht",
@@ -22,8 +22,7 @@ export const restaurant = {
   phone: "+31 6 41685055",
   phoneDisplay: "+31 6 41685055",
   email: "hello@biryanihousedordrecht.com",
-  businessEmail: "info@biryanihousedordrecht.com",
-  hours: "Elke dag geopend van 14:00 tot 22:00",
+  hours: "Open daily from 14:00 to 22:00",
   hoursShort: "14:00-22:00",
   buffetPrice: "€29.50",
   buffetSlots: ["17:30-19:30", "19:30-22:00"],

@@ -1,23 +1,15 @@
-"use client";
-
-import { motion, type HTMLMotionProps } from "framer-motion";
+import type * as React from "react";
 
 import { cn } from "@/lib/utils";
 
-type RevealProps = HTMLMotionProps<"div"> & {
+type RevealProps = React.HTMLAttributes<HTMLDivElement> & {
   delay?: number;
 };
 
-export function Reveal({ children, className, delay = 0, ...props }: RevealProps) {
+export function Reveal({ children, className, delay: _delay, ...props }: RevealProps) {
   return (
-    <motion.div
-      initial={{ y: 18 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1], delay }}
-      className={cn(className)}
-      {...props}
-    >
+    <div className={cn(className)} {...props}>
       {children}
-    </motion.div>
+    </div>
   );
 }

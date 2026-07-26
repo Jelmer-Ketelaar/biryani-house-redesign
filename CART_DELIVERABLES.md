@@ -11,6 +11,7 @@ A production-ready, enterprise-grade shopping cart system for the Biryani House 
 ### Core Files (3,350+ lines)
 
 #### Library (`lib/cart/`)
+
 1. **`types.ts`** (244 lines)
    - Complete TypeScript interface definitions
    - Cart items, addons, pricing, delivery, upsells
@@ -130,6 +131,7 @@ A production-ready, enterprise-grade shopping cart system for the Biryani House 
 ## ✨ Features Implemented
 
 ### ✅ Core Cart
+
 - [x] Persistent cart with localStorage
 - [x] Add items with full customization
 - [x] Update quantity (increment/decrement)
@@ -140,6 +142,7 @@ A production-ready, enterprise-grade shopping cart system for the Biryani House 
 - [x] Error handling
 
 ### ✅ Addons & Customization
+
 - [x] Multiple addon selection per item
 - [x] Addon pricing and quantities
 - [x] Required vs optional addons
@@ -149,6 +152,7 @@ A production-ready, enterprise-grade shopping cart system for the Biryani House 
 - [x] Notes editor modal
 
 ### ✅ Pricing System
+
 - [x] Itemized breakdown
 - [x] Subtotal calculation
 - [x] Addons total
@@ -160,6 +164,7 @@ A production-ready, enterprise-grade shopping cart system for the Biryani House 
 - [x] Total calculation
 
 ### ✅ Discounts & Promos
+
 - [x] Percentage discounts
 - [x] Fixed-amount discounts
 - [x] Minimum order value
@@ -171,6 +176,7 @@ A production-ready, enterprise-grade shopping cart system for the Biryani House 
 - [x] Validation helpers
 
 ### ✅ Delivery & Logistics
+
 - [x] Multiple service methods (delivery, pickup, scheduled)
 - [x] Address management
 - [x] Postal code validation (NL format)
@@ -182,6 +188,7 @@ A production-ready, enterprise-grade shopping cart system for the Biryani House 
 - [x] Service fees
 
 ### ✅ Upsells & Recommendations
+
 - [x] Dismissible offers
 - [x] Related products
 - [x] Frequently bought together
@@ -192,6 +199,7 @@ A production-ready, enterprise-grade shopping cart system for the Biryani House 
 - [x] Memoized filtering
 
 ### ✅ Mobile & UX
+
 - [x] Sticky mobile button (bottom-right)
 - [x] Full-screen mobile panel
 - [x] Slide-up animation
@@ -203,6 +211,7 @@ A production-ready, enterprise-grade shopping cart system for the Biryani House 
 - [x] Auto-hide when empty
 
 ### ✅ Accessibility
+
 - [x] ARIA labels on all controls
 - [x] Keyboard navigation
 - [x] Semantic HTML
@@ -214,6 +223,7 @@ A production-ready, enterprise-grade shopping cart system for the Biryani House 
 - [x] Form labels
 
 ### ✅ Developer Experience
+
 - [x] Complete TypeScript types
 - [x] JSDoc comments
 - [x] Zustand DevTools
@@ -229,6 +239,7 @@ A production-ready, enterprise-grade shopping cart system for the Biryani House 
 ## 🎯 Technical Highlights
 
 ### State Management
+
 - **Zustand Store** with multiple middleware layers
 - **DevTools integration** for debugging
 - **Persistence middleware** for localStorage
@@ -236,6 +247,7 @@ A production-ready, enterprise-grade shopping cart system for the Biryani House 
 - **Optimistic UI** with automatic sync
 
 ### Pricing Logic
+
 ```
 Subtotal = Σ(basePrice × qty)
 AddonsTotal = Σ(addonPrice × qty)
@@ -246,6 +258,7 @@ Total = ItemsSubtotal - Discount + Delivery + Service + Tax
 ```
 
 ### Component Architecture
+
 - Modular component design
 - CSS-in-JS for scoped styles
 - Design system integration
@@ -253,6 +266,7 @@ Total = ItemsSubtotal - Discount + Delivery + Service + Tax
 - Touch-friendly interactions
 
 ### Performance
+
 - Minimal re-renders (Zustand selectors)
 - Debounced persistence (1s)
 - Memoized calculations
@@ -264,25 +278,26 @@ Total = ItemsSubtotal - Discount + Delivery + Service + Tax
 ## 🚀 Quick Integration
 
 ### 1. Import Components
+
 ```tsx
-import { CartPanel } from '@/components/cart';
+import { CartPanel } from "@/components/cart";
 ```
 
 ### 2. Add to Layout
+
 ```tsx
-<CartPanel 
-  onCheckout={handleCheckout}
-  showUpsells={true}
-/>
+<CartPanel onCheckout={handleCheckout} showUpsells={true} />
 ```
 
 ### 3. Add Items
+
 ```tsx
 const addItem = useCartStore((state) => state.addItem);
 addItem({ menuItemId, name, basePrice, ... });
 ```
 
 ### 4. Access State
+
 ```tsx
 const items = useCartItems();
 const pricing = useCartPricing();
@@ -292,24 +307,25 @@ const pricing = useCartPricing();
 
 ## 📊 Code Statistics
 
-| Component | Lines | Purpose |
-|-----------|-------|---------|
-| types.ts | 244 | Type definitions |
-| store.ts | 528 | State management |
-| utils.ts | 346 | Utilities |
-| CartItem.tsx | 460 | Item display |
-| CartPanel.tsx | 402 | Main cart |
-| PricingBreakdown.tsx | 171 | Pricing |
-| PromoCodeInput.tsx | 311 | Promo input |
-| UpsellSection.tsx | 298 | Upsells |
-| Documentation | 1,048 | Guides & docs |
-| **TOTAL** | **3,808** | **Full system** |
+| Component            | Lines     | Purpose          |
+| -------------------- | --------- | ---------------- |
+| types.ts             | 244       | Type definitions |
+| store.ts             | 528       | State management |
+| utils.ts             | 346       | Utilities        |
+| CartItem.tsx         | 460       | Item display     |
+| CartPanel.tsx        | 402       | Main cart        |
+| PricingBreakdown.tsx | 171       | Pricing          |
+| PromoCodeInput.tsx   | 311       | Promo input      |
+| UpsellSection.tsx    | 298       | Upsells          |
+| Documentation        | 1,048     | Guides & docs    |
+| **TOTAL**            | **3,808** | **Full system**  |
 
 ---
 
 ## 🎨 Design System Integration
 
 Fully integrated with Biryani House design tokens:
+
 - Colors: `--bh-brand`, `--bh-surface`, `--bh-border`, etc.
 - Spacing: Consistent scale
 - Typography: `--bh-font-sans`
@@ -322,6 +338,7 @@ Fully integrated with Biryani House design tokens:
 ## 🔌 API Integration Points
 
 Ready to connect to backend:
+
 1. **POST /api/cart/persist** - Save cart
 2. **POST /api/promo/validate** - Validate promo code
 3. **POST /api/delivery/quote** - Get delivery quote
@@ -426,6 +443,7 @@ Component files                   ← Inline docs
 ## 🎉 Summary
 
 **A complete, production-ready shopping cart system** with:
+
 - ✅ All requested features
 - ✅ 3,800+ lines of code
 - ✅ Comprehensive documentation
@@ -440,5 +458,5 @@ Component files                   ← Inline docs
 
 ---
 
-*Built for Biryani House Platform Redesign*
-*Production Grade • Enterprise Ready • Fully Documented*
+_Built for Biryani House Platform Redesign_
+_Production Grade • Enterprise Ready • Fully Documented_

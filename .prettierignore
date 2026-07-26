@@ -1,4 +1,6 @@
 .next
+.next-*
+.playwright-cli
 node_modules
 coverage
 dist
@@ -6,3 +8,5 @@ package-lock.json
 pnpm-lock.yaml
 yarn.lock
 public
+backend
+.obsolete-symfony

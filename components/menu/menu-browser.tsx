@@ -18,7 +18,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import type * as React from "react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { formatEuro, spiceLabel } from "@/lib/menu/format";
@@ -46,6 +46,7 @@ export function MenuBrowser({ initialMenu }: { initialMenu: MenuResponse }) {
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [selectedAddons, setSelectedAddons] = useState<string[]>([]);
+  const customizerDialogRef = useRef<HTMLDialogElement>(null);
   const cartItems = useCartStore((state) => state.items);
   const addCartItem = useCartStore((state) => state.addItem);
 
@@ -82,10 +83,19 @@ export function MenuBrowser({ initialMenu }: { initialMenu: MenuResponse }) {
       }, 0)
     : 0;
 
+  useEffect(() => {
+    const dialog = customizerDialogRef.current;
+    if (selectedItem && dialog && !dialog.open) dialog.showModal();
+  }, [selectedItem]);
+
   function openItem(item: MenuItem) {
     setSelectedItem(item);
     setQuantity(1);
     setSelectedAddons([]);
+  }
+
+  function closeItem() {
+    customizerDialogRef.current?.close();
   }
 
   function toggleDietary(label: DietaryLabel) {
@@ -127,12 +137,12 @@ export function MenuBrowser({ initialMenu }: { initialMenu: MenuResponse }) {
               <h1 className="mt-4 max-w-4xl text-4xl font-black leading-tight text-[#fff7e8] sm:text-6xl">
                 Order halal biryani, curries and tandoori favorites.
               </h1>
-              <p className="mt-4 max-w-2xl text-lg leading-8 text-[#f8e6c8]/78">
-                A premium food-app style ordering experience for takeaway and delivery from{" "}
+              <p className="text-[#f8e6c8]/78 mt-4 max-w-2xl text-lg leading-8">
+                Browse the live menu, customize add-ons and review your basket before checkout with{" "}
                 {restaurant.name}.
               </p>
             </div>
-            <div className="rounded-[1.75rem] border border-white/10 bg-[#120c09]/78 p-4 shadow-[0_30px_90px_rgba(0,0,0,0.34)] backdrop-blur-xl">
+            <div className="bg-[#120c09]/78 rounded-[1.75rem] border border-white/10 p-4 shadow-[0_30px_90px_rgba(0,0,0,0.34)] backdrop-blur-xl">
               <div className="grid grid-cols-3 gap-3 text-center">
                 {[
                   [String(initialMenu.items.length), "Menu items"],
@@ -141,7 +151,7 @@ export function MenuBrowser({ initialMenu }: { initialMenu: MenuResponse }) {
                 ].map(([value, label]) => (
                   <div key={label} className="rounded-2xl bg-white/[0.07] p-3">
                     <p className="text-2xl font-black text-[#f2c46e]">{value}</p>
-                    <p className="text-xs font-bold text-[#f8e6c8]/64">{label}</p>
+                    <p className="text-[#f8e6c8]/64 text-xs font-bold">{label}</p>
                   </div>
                 ))}
               </div>
@@ -150,14 +160,16 @@ export function MenuBrowser({ initialMenu }: { initialMenu: MenuResponse }) {
         </div>
       </section>
 
-      <section className="sticky top-16 z-30 border-b border-white/10 bg-[#0b0807]/92 backdrop-blur-xl">
+      <section className="bg-[#0b0807]/92 sticky top-16 z-30 border-b border-white/10 backdrop-blur-xl">
         <div className="container space-y-3 py-3">
           <div className="flex gap-2">
             <label className="relative block flex-1">
               <span className="sr-only">Search menu</span>
               <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <input
-                className="min-h-12 w-full rounded-full border border-white/12 bg-white/[0.07] pl-11 pr-4 text-sm text-[#fff7e8] shadow-sm outline-none transition placeholder:text-[#f8e6c8]/42 focus:border-[#d99a2b]/60 focus:ring-2 focus:ring-[#d99a2b]/30"
+                type="search"
+                autoComplete="off"
+                className="border-white/12 placeholder:text-[#f8e6c8]/42 min-h-12 w-full rounded-full border bg-white/[0.07] pl-11 pr-4 text-sm text-[#fff7e8] shadow-sm outline-none transition focus:border-[#d99a2b]/60 focus:ring-2 focus:ring-[#d99a2b]/30"
                 placeholder="Search biryani, curry, naan..."
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
@@ -221,8 +233,8 @@ export function MenuBrowser({ initialMenu }: { initialMenu: MenuResponse }) {
               className={cn(
                 "mt-4 flex w-full items-center justify-between rounded-2xl border p-3 text-left text-sm font-bold transition",
                 popularOnly
-                  ? "border-[#d99a2b] bg-[#d99a2b]/16 text-[#f2c46e]"
-                  : "border-white/10 bg-[#0f0907] text-[#f8e6c8]/72"
+                  ? "bg-[#d99a2b]/16 border-[#d99a2b] text-[#f2c46e]"
+                  : "text-[#f8e6c8]/72 border-white/10 bg-[#0f0907]"
               )}
               onClick={() => setPopularOnly((value) => !value)}
             >
@@ -236,7 +248,7 @@ export function MenuBrowser({ initialMenu }: { initialMenu: MenuResponse }) {
 
             <label className="mt-5 block text-sm font-black">
               Maximum spice
-              <span className="mt-1 block text-sm font-semibold text-[#f8e6c8]/64">
+              <span className="text-[#f8e6c8]/64 mt-1 block text-sm font-semibold">
                 {spiceLabel(maxSpice)}
               </span>
               <input
@@ -262,7 +274,7 @@ export function MenuBrowser({ initialMenu }: { initialMenu: MenuResponse }) {
                       "rounded-full border px-3 py-2 text-xs font-bold transition",
                       dietary.includes(label)
                         ? "border-[#d99a2b] bg-[#d99a2b] text-[#1a100b]"
-                        : "border-white/10 bg-[#0f0907] text-[#f8e6c8]/68 hover:text-white"
+                        : "text-[#f8e6c8]/68 border-white/10 bg-[#0f0907] hover:text-white"
                     )}
                     onClick={() => toggleDietary(label)}
                   >
@@ -273,16 +285,16 @@ export function MenuBrowser({ initialMenu }: { initialMenu: MenuResponse }) {
             </div>
           </section>
 
-          <section className="rounded-3xl border border-[#d99a2b]/24 bg-[#7f1d16] p-5 text-white shadow-[0_20px_55px_rgba(127,29,22,0.25)]">
-            <h2 className="font-black">Combo suggestions</h2>
+          <section className="border-[#d99a2b]/24 rounded-3xl border bg-[#7f1d16] p-5 text-white shadow-[0_20px_55px_rgba(127,29,22,0.25)]">
+            <h2 className="font-black">Meal ideas</h2>
             <div className="mt-3 space-y-3">
               {initialMenu.combos.map((combo) => (
                 <div key={combo.slug} className="bg-white/12 rounded-2xl p-4">
                   <p className="font-black">{combo.name}</p>
-                  <p className="mt-1 text-sm leading-6 text-white/78">
-                    {combo.description}
+                  <p className="text-white/78 mt-1 text-sm leading-6">{combo.description}</p>
+                  <p className="mt-2 text-xs font-bold uppercase tracking-[0.12em] text-white/60">
+                    Add dishes individually
                   </p>
-                  <p className="mt-2 text-sm font-black">{combo.savingsText}</p>
                 </div>
               ))}
             </div>
@@ -292,12 +304,21 @@ export function MenuBrowser({ initialMenu }: { initialMenu: MenuResponse }) {
         <section className="min-w-0 space-y-8">
           <div className="flex items-center justify-between gap-3">
             <div>
-              <p className="text-sm font-bold text-[#f8e6c8]/60">
+              <p
+                aria-live="polite"
+                aria-atomic="true"
+                className="text-sm font-bold text-[#f8e6c8]/60"
+              >
                 {filteredItems.length} dishes match your choices
               </p>
               <h2 className="text-2xl font-black text-[#fff7e8] sm:text-3xl">Today&apos;s menu</h2>
             </div>
-            <Button variant="outline" size="sm" className="border-white/15 bg-white/10 text-white hover:bg-white/15 hover:text-white" onClick={clearFilters}>
+            <Button
+              variant="outline"
+              size="sm"
+              className="border-white/15 bg-white/10 text-white hover:bg-white/15 hover:text-white"
+              onClick={clearFilters}
+            >
               Clear
             </Button>
           </div>
@@ -306,8 +327,10 @@ export function MenuBrowser({ initialMenu }: { initialMenu: MenuResponse }) {
             groupedItems.map((group) => (
               <section key={group.category.slug} className="scroll-mt-40 space-y-4">
                 <div>
-                  <h3 className="text-xl font-black text-[#fff7e8] sm:text-2xl">{group.category.name}</h3>
-                  <p className="mt-1 max-w-2xl text-sm leading-6 text-[#f8e6c8]/64">
+                  <h3 className="text-xl font-black text-[#fff7e8] sm:text-2xl">
+                    {group.category.name}
+                  </h3>
+                  <p className="text-[#f8e6c8]/64 mt-1 max-w-2xl text-sm leading-6">
                     {group.category.description}
                   </p>
                 </div>
@@ -319,10 +342,10 @@ export function MenuBrowser({ initialMenu }: { initialMenu: MenuResponse }) {
               </section>
             ))
           ) : (
-            <div className="rounded-3xl border border-dashed border-white/14 bg-white/[0.06] p-8 text-center">
+            <div className="border-white/14 rounded-3xl border border-dashed bg-white/[0.06] p-8 text-center">
               <Sparkles className="mx-auto h-8 w-8 text-[#d99a2b]" />
               <h3 className="mt-4 text-xl font-black text-[#fff7e8]">No dishes found</h3>
-              <p className="mx-auto mt-2 max-w-md text-[#f8e6c8]/64">
+              <p className="text-[#f8e6c8]/64 mx-auto mt-2 max-w-md">
                 Try a broader search, a lower spice level, or remove a dietary filter.
               </p>
               <Button className="mt-5" onClick={clearFilters}>
@@ -336,34 +359,28 @@ export function MenuBrowser({ initialMenu }: { initialMenu: MenuResponse }) {
       <CartBar itemCount={cartItemCount} total={cartTotal} />
 
       {selectedItem ? (
-        <div
-          className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm"
-          role="dialog"
-          aria-modal="true"
+        <dialog
+          ref={customizerDialogRef}
+          aria-labelledby="customizer-title"
+          className="fixed inset-x-0 bottom-0 top-auto z-50 m-0 max-h-[92dvh] w-full max-w-none overflow-y-auto rounded-t-[2rem] border border-white/10 bg-[#100a07] p-5 text-[#fff7e8] shadow-2xl backdrop:bg-black/70 backdrop:backdrop-blur-sm md:inset-0 md:m-auto md:w-[min(620px,calc(100vw-2rem))] md:rounded-[2rem]"
+          onClose={() => setSelectedItem(null)}
         >
-          <button
-            type="button"
-            className="absolute inset-0 h-full w-full cursor-default"
-            aria-label="Close item customizer"
-            onClick={() => setSelectedItem(null)}
-          />
-          <div className="absolute inset-x-0 bottom-0 max-h-[92dvh] overflow-y-auto rounded-t-[2rem] border border-white/10 bg-[#100a07] p-5 text-[#fff7e8] shadow-2xl md:left-1/2 md:top-1/2 md:w-[min(620px,calc(100vw-2rem))] md:-translate-x-1/2 md:-translate-y-1/2 md:rounded-[2rem]">
-            <div className="relative">
-              <button
-                type="button"
-                className="absolute right-0 top-0 grid h-10 w-10 place-items-center rounded-full border border-white/10 bg-white/[0.07] text-[#f8e6c8]/64 transition hover:text-white"
-                aria-label="Close"
-                onClick={() => setSelectedItem(null)}
-              >
-                <X className="h-4 w-4" />
-              </button>
-              <p className="text-xs font-black uppercase tracking-[0.18em] text-[#d99a2b]">Customize</p>
-              <h2 className="pr-12 text-2xl font-black">{selectedItem.name}</h2>
-              <p className="mt-2 pr-8 leading-7 text-[#f8e6c8]/68">
-                {selectedItem.description}
-              </p>
-            </div>
-
+          <div className="relative">
+            <button
+              type="button"
+              className="text-[#f8e6c8]/64 absolute right-0 top-0 grid h-10 w-10 place-items-center rounded-full border border-white/10 bg-white/[0.07] transition hover:text-white"
+              aria-label="Close"
+              onClick={closeItem}
+            >
+              <X className="h-4 w-4" />
+            </button>
+            <p className="text-xs font-black uppercase tracking-[0.18em] text-[#d99a2b]">
+              Customize
+            </p>
+            <h2 id="customizer-title" className="pr-12 text-2xl font-black">
+              {selectedItem.name}
+            </h2>
+            <p className="text-[#f8e6c8]/68 mt-2 pr-8 leading-7">{selectedItem.description}</p>
             <div className="mt-4 flex flex-wrap gap-2">
               <Badge icon={Timer}>{selectedItem.prepTimeMinutes} min</Badge>
               <Badge icon={Flame}>{spiceLabel(selectedItem.spiceLevel)}</Badge>
@@ -375,7 +392,7 @@ export function MenuBrowser({ initialMenu }: { initialMenu: MenuResponse }) {
             </div>
 
             {selectedItem.allergenTags.length > 0 ? (
-              <p className="mt-4 rounded-2xl border border-[#d99a2b]/24 bg-[#d99a2b]/10 p-3 text-sm leading-6 text-[#f8e6c8]/80">
+              <p className="border-[#d99a2b]/24 mt-4 rounded-2xl border bg-[#d99a2b]/10 p-3 text-sm leading-6 text-[#f8e6c8]/80">
                 <strong>Allergens:</strong> {selectedItem.allergenTags.join(", ")}
               </p>
             ) : null}
@@ -395,7 +412,7 @@ export function MenuBrowser({ initialMenu }: { initialMenu: MenuResponse }) {
                         className={cn(
                           "flex items-center justify-between gap-4 rounded-2xl border p-4 text-left transition",
                           active
-                            ? "border-[#d99a2b] bg-[#d99a2b]/16"
+                            ? "bg-[#d99a2b]/16 border-[#d99a2b]"
                             : "border-white/10 bg-white/[0.06] hover:border-[#d99a2b]/35"
                         )}
                         onClick={() =>
@@ -408,7 +425,7 @@ export function MenuBrowser({ initialMenu }: { initialMenu: MenuResponse }) {
                       >
                         <span>
                           <span className="block font-black">{addon.name}</span>
-                          <span className="mt-1 block text-sm text-[#f8e6c8]/62">
+                          <span className="text-[#f8e6c8]/62 mt-1 block text-sm">
                             {addon.description}
                           </span>
                         </span>
@@ -458,7 +475,7 @@ export function MenuBrowser({ initialMenu }: { initialMenu: MenuResponse }) {
                       addonNames: selectedAddonDetails.map((addon) => addon.name),
                       unitPriceCents: selectedItem.basePriceCents + selectedAddonsTotal
                     });
-                    setSelectedItem(null);
+                    closeItem();
                   }}
                 >
                   Add {formatEuro((selectedItem.basePriceCents + selectedAddonsTotal) * quantity)}
@@ -466,7 +483,7 @@ export function MenuBrowser({ initialMenu }: { initialMenu: MenuResponse }) {
               </div>
             </div>
           </div>
-        </div>
+        </dialog>
       ) : null}
     </main>
   );
@@ -486,11 +503,13 @@ function MenuItemCard({ item, onOpen }: { item: MenuItem; onOpen: () => void }) 
               </span>
             ) : null}
           </div>
-          <p className="mt-2 line-clamp-2 text-sm leading-6 text-[#f8e6c8]/64">
+          <p className="text-[#f8e6c8]/64 mt-2 line-clamp-2 text-sm leading-6">
             {item.description}
           </p>
         </div>
-        <span className="shrink-0 text-lg font-black text-[#f2c46e]">{formatEuro(item.basePriceCents)}</span>
+        <span className="shrink-0 text-lg font-black text-[#f2c46e]">
+          {formatEuro(item.basePriceCents)}
+        </span>
       </div>
       <div className="mt-4 flex flex-wrap gap-2">
         <Badge icon={Timer}>{item.prepTimeMinutes} min</Badge>
@@ -501,7 +520,11 @@ function MenuItemCard({ item, onOpen }: { item: MenuItem; onOpen: () => void }) 
           </Badge>
         ))}
       </div>
-      <Button className="mt-5 w-full bg-[#d99a2b] text-[#1a100b] hover:bg-[#efb44c]" disabled={item.status !== "AVAILABLE"} onClick={onOpen}>
+      <Button
+        className="mt-5 w-full bg-[#d99a2b] text-[#1a100b] hover:bg-[#efb44c]"
+        disabled={item.status !== "AVAILABLE"}
+        onClick={onOpen}
+      >
         <Plus className="h-4 w-4" />
         {item.status === "AVAILABLE" ? "Customize" : "Sold out"}
       </Button>
@@ -517,7 +540,7 @@ function Badge({
   icon: React.ComponentType<{ className?: string }>;
 }) {
   return (
-    <span className="inline-flex items-center gap-1 rounded-full bg-white/[0.08] px-2.5 py-1 text-xs font-bold text-[#f8e6c8]/68">
+    <span className="text-[#f8e6c8]/68 inline-flex items-center gap-1 rounded-full bg-white/[0.08] px-2.5 py-1 text-xs font-bold">
       <Icon className="h-3.5 w-3.5 text-[#d99a2b]" />
       {children}
     </span>
@@ -541,7 +564,7 @@ function CategoryButton({
         "shrink-0 rounded-full border px-4 py-2.5 text-sm font-black transition",
         active
           ? "border-[#d99a2b] bg-[#d99a2b] text-[#1a100b] shadow-[0_12px_25px_rgba(217,154,43,0.18)]"
-          : "border-white/10 bg-white/[0.06] text-[#f8e6c8]/68 hover:text-white"
+          : "text-[#f8e6c8]/68 border-white/10 bg-white/[0.06] hover:text-white"
       )}
       onClick={onClick}
     >
@@ -554,20 +577,26 @@ function CartBar({ itemCount, total }: { itemCount: number; total: number }) {
   return (
     <div className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-[#0b0807]/95 p-3 shadow-[0_-18px_60px_rgba(0,0,0,0.32)] backdrop-blur-xl">
       <div className="container flex items-center gap-3">
-        <div className="flex flex-1 items-center gap-3">
+        <div className="flex flex-1 items-center gap-3" aria-live="polite" aria-atomic="true">
           <span className="grid h-11 w-11 place-items-center rounded-full bg-[#d99a2b] text-[#1a100b]">
             <ShoppingBag className="h-5 w-5" />
           </span>
           <div>
             <p className="text-sm font-black text-[#fff7e8]">{itemCount} items</p>
-            <p className="text-xs font-bold text-[#f8e6c8]/58">
-              {itemCount > 0 ? "Ready for checkout" : "Add dishes to start"}
+            <p className="text-[#f8e6c8]/58 text-xs font-bold">
+              {itemCount > 0 ? "Subtotal before fees" : "Add dishes to start"}
             </p>
           </div>
         </div>
-        <Button asChild={itemCount > 0} disabled={itemCount === 0} size="lg" className="min-w-36 bg-[#d99a2b] text-[#1a100b] hover:bg-[#efb44c]">
+        <Button
+          asChild={itemCount > 0}
+          disabled={itemCount === 0}
+          size="lg"
+          className="min-w-36 bg-[#d99a2b] text-[#1a100b] hover:bg-[#efb44c]"
+        >
           {itemCount > 0 ? (
             <Link href="/checkout">
+              <span className="hidden sm:inline">Checkout · </span>
               {formatEuro(total)}
               <ChevronDown className="h-4 w-4 rotate-[-90deg]" />
             </Link>

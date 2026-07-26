@@ -29,6 +29,7 @@ TOTAL: ~3,350 lines of production-ready code
 ## ✨ Implemented Features
 
 ### ✅ Core Cart Functionality
+
 - Persistent cart with localStorage
 - Add, update, remove, clear operations
 - Optimistic UI with instant feedback
@@ -36,6 +37,7 @@ TOTAL: ~3,350 lines of production-ready code
 - Full TypeScript support
 
 ### ✅ Quantity & Customization
+
 - Quantity increment/decrement buttons
 - Item notes and special instructions
 - Multi-addon support per item
@@ -43,6 +45,7 @@ TOTAL: ~3,350 lines of production-ready code
 - Addon subtotal calculations
 
 ### ✅ Pricing System
+
 - Itemized pricing breakdown
 - Automatic tax calculation (21% VAT)
 - Service fee support
@@ -51,6 +54,7 @@ TOTAL: ~3,350 lines of production-ready code
 - Real-time price updates
 
 ### ✅ Discounts & Promos
+
 - Percentage-based discounts
 - Fixed-amount discounts
 - Minimum order value validation
@@ -61,6 +65,7 @@ TOTAL: ~3,350 lines of production-ready code
 - Remove promo functionality
 
 ### ✅ Delivery & Logistics
+
 - Three service methods: delivery, pickup, scheduled
 - Delivery address management
 - Postal code validation (Dutch format)
@@ -71,6 +76,7 @@ TOTAL: ~3,350 lines of production-ready code
 - Service fee calculation per method
 
 ### ✅ Upsells & Recommendations
+
 - Dismissible recommendations
 - Related product suggestions
 - Discount badges
@@ -80,6 +86,7 @@ TOTAL: ~3,350 lines of production-ready code
 - One-click add-to-cart
 
 ### ✅ Mobile & Responsive UX
+
 - Sticky mobile cart button (bottom-right)
 - Full-screen mobile panel
 - Slide-up animation
@@ -90,6 +97,7 @@ TOTAL: ~3,350 lines of production-ready code
 - Mobile-first design
 
 ### ✅ Accessibility
+
 - ARIA labels on all controls
 - Keyboard navigation support
 - Semantic HTML
@@ -100,6 +108,7 @@ TOTAL: ~3,350 lines of production-ready code
 - Error announcements (role="alert")
 
 ### ✅ Developer Experience
+
 - Complete TypeScript types
 - Comprehensive JSDoc comments
 - Zustand DevTools integration
@@ -111,6 +120,7 @@ TOTAL: ~3,350 lines of production-ready code
 ## 🏗️ Architecture Highlights
 
 ### State Management (Zustand)
+
 ```typescript
 - Persisted state with localStorage
 - DevTools middleware for debugging
@@ -120,6 +130,7 @@ TOTAL: ~3,350 lines of production-ready code
 ```
 
 ### Pricing Calculation
+
 ```typescript
 Subtotal = Σ(basePrice × qty)
 AddonsTotal = Σ(addonPrice × qty)
@@ -130,6 +141,7 @@ Total = ItemsSubtotal - Discount + Delivery + Service + Tax
 ```
 
 ### Persistence Flow
+
 ```
 User Action → Optimistic Update → Background Persist → API Call
               (instant, dimmed)   (1s debounce)   (try/catch)
@@ -138,6 +150,7 @@ User Action → Optimistic Update → Background Persist → API Call
 ## 🚀 Key Components
 
 ### CartPanel
+
 - Main shopping cart interface
 - Desktop sticky sidebar
 - Mobile full-screen overlay
@@ -146,6 +159,7 @@ User Action → Optimistic Update → Background Persist → API Call
 - Clear/checkout buttons
 
 ### CartItem
+
 - Individual item display
 - Quantity controls (±)
 - Addons list with prices
@@ -155,6 +169,7 @@ User Action → Optimistic Update → Background Persist → API Call
 - Total price calculation
 
 ### PricingBreakdown
+
 - Itemized pricing display
 - Shows: subtotal, discounts, fees, taxes, total
 - Discount highlighting
@@ -162,6 +177,7 @@ User Action → Optimistic Update → Background Persist → API Call
 - Clean, scannable layout
 
 ### PromoCodeInput
+
 - Input field with button
 - Real-time validation
 - Error messaging
@@ -170,6 +186,7 @@ User Action → Optimistic Update → Background Persist → API Call
 - Enter key support
 
 ### UpsellSection
+
 - Recommended items display
 - Dismissible per offer
 - Category badges
@@ -180,6 +197,7 @@ User Action → Optimistic Update → Background Persist → API Call
 ## 📊 Type Safety
 
 Complete TypeScript types for:
+
 - Cart items and addons
 - Pricing and discounts
 - Delivery and quotes
@@ -191,6 +209,7 @@ Complete TypeScript types for:
 ## 🎨 Design System Integration
 
 Uses Biryani House design tokens:
+
 - CSS variables for colors (`--bh-*`)
 - Design radius (`--bh-radius-*`)
 - Shadows (`--bh-shadow-*`)
@@ -218,6 +237,7 @@ Desktop:  ≥ 1024px  (sticky sidebar)
 ## 🧪 Testing Ready
 
 Prepared for:
+
 - Unit tests (calculations, formatting, validation)
 - Integration tests (cart operations, persistence)
 - E2E tests (full checkout flow)
@@ -235,6 +255,7 @@ Prepared for:
 ## 🔄 API Integration Points
 
 Ready to connect to backend:
+
 ```
 POST /api/cart/persist          → Persist cart
 POST /api/promo/validate        → Validate promo code
@@ -246,6 +267,7 @@ GET  /api/cart/load             → Load user's cart
 ## 📚 Documentation
 
 Included:
+
 - `README.md` - Feature overview & architecture
 - `INTEGRATION_GUIDE.tsx` - Complete usage examples
 - JSDoc comments throughout codebase
@@ -255,26 +277,26 @@ Included:
 ## 🎯 Usage Examples
 
 ### Quick Add to Cart
+
 ```tsx
 useCartStore.getState().addItem({
-  menuItemId: 'biryani-001',
-  name: 'Chicken Biryani',
+  menuItemId: "biryani-001",
+  name: "Chicken Biryani",
   basePrice: 1295,
   quantity: 1,
-  selectedAddons: [{ addonId: 'raita', quantity: 1 }],
-  notes: 'Extra spicy',
+  selectedAddons: [{ addonId: "raita", quantity: 1 }],
+  notes: "Extra spicy"
 });
 ```
 
 ### Full Integration
+
 ```tsx
-<CartPanel
-  onCheckout={handleCheckout}
-  showUpsells={true}
-/>
+<CartPanel onCheckout={handleCheckout} showUpsells={true} />
 ```
 
 ### Hooks for Custom Components
+
 ```tsx
 const items = useCartItems();
 const pricing = useCartPricing();
@@ -323,6 +345,7 @@ const itemCount = useCartItemCount();
 ## 📞 Integration Support
 
 The `INTEGRATION_GUIDE.tsx` file contains:
+
 - Step-by-step examples
 - Common patterns
 - Hook usage
