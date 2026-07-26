@@ -17,6 +17,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { restaurant } from "@/lib/restaurant/content";
 import { cn } from "@/lib/utils";
+import { color } from "framer-motion";
 
 export const metadata = {
   title: "Reserve a Table | Biryani House Dordrecht",
@@ -61,17 +62,20 @@ export default function ReservePage() {
             sizes="100vw"
             className="object-cover"
           />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_75%_20%,rgba(217,154,43,0.22),transparent_24rem),linear-gradient(90deg,rgba(8,6,5,0.98),rgba(8,6,5,0.8)_50%,rgba(8,6,5,0.44))]" />
+          <div
+            className="absolute inset-0 bg-[radial-gradient(circle_at_75%_20%,rgba(217,154,43,0.22),transparent_24rem),linear-gradient(90deg,rgba(8,6,5,0.98),rgba(8,6,5,0.8)_50%,rgba(8,6,5,0.44))]" />
           <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#0b0807] to-transparent" />
         </div>
 
         <div className="container relative grid gap-10 py-12 md:grid-cols-[1fr_380px] md:items-end md:py-16">
           <section>
-            <p className="inline-flex items-center gap-2 rounded-full border border-[#d99a2b]/30 bg-[#d99a2b]/10 px-3 py-2 text-xs font-black uppercase tracking-[0.16em] text-[#f2c46e] backdrop-blur">
+            <p
+              className="inline-flex items-center gap-2 rounded-full border border-[#d99a2b]/30 bg-[#d99a2b]/10 px-3 py-2 text-xs font-black uppercase tracking-[0.16em] text-[#f2c46e] backdrop-blur">
               <CalendarDays className="h-4 w-4" />
               Reservations
             </p>
-            <h1 className="mt-5 max-w-4xl text-5xl font-black leading-[0.92] tracking-normal text-[#fff7e8] sm:text-6xl">
+            <h1
+              className="mt-5 max-w-4xl text-5xl font-black leading-[0.92] tracking-normal text-[#fff7e8] sm:text-6xl">
               Book a refined halal dining experience.
             </h1>
             <p className="text-[#f8e6c8]/78 mt-5 max-w-2xl text-lg leading-8">
@@ -96,7 +100,8 @@ export default function ReservePage() {
             </div>
           </section>
 
-          <aside className="bg-[#120c09]/78 rounded-[1.75rem] border border-white/10 p-5 shadow-[0_30px_90px_rgba(0,0,0,0.34)] backdrop-blur-xl">
+          <aside
+            className="bg-[#120c09]/78 rounded-[1.75rem] border border-white/10 p-5 shadow-[0_30px_90px_rgba(0,0,0,0.34)] backdrop-blur-xl">
             <p className="text-xs font-black uppercase tracking-[0.18em] text-[#d99a2b]">Tonight</p>
             <div className="mt-4 grid gap-3">
               {[
@@ -203,10 +208,9 @@ export default function ReservePage() {
               <select
                 id="occasion"
                 name="occasion"
-                className="border-white/12 mt-2 min-h-12 w-full rounded-2xl border bg-white/[0.07] px-4 text-sm text-[#fff7e8] outline-none focus:border-[#d99a2b]/60 focus:ring-2 focus:ring-[#d99a2b]/30"
-              >
-                <option>A la carte dinner</option>
-                <option>Buffet reservation</option>
+                className="border-white/12 mt-2 min-h-12 w-full rounded-2xl border bg-white/[0.07] px-4 text-sm text-[#fff7e8] outline-none focus:border-[#d99a2b]/60 focus:ring-2 focus:ring-[#d99a2b]/30">
+                <option className="bg-white text-[#111111]">A la carte dinner</option>
+                <option className="bg-white text-[#111111]">Buffet reservation</option>
               </select>
             </label>
             <label className="block text-sm font-black text-[#fff7e8]" htmlFor="notes">
@@ -216,7 +220,7 @@ export default function ReservePage() {
                 name="notes"
                 rows={5}
                 placeholder="Dietary needs, children, celebration details, preferred seating..."
-                className="border-white/12 placeholder:text-[#f8e6c8]/38 mt-2 w-full rounded-2xl border bg-white/[0.07] px-4 py-3 text-sm text-[#fff7e8] outline-none focus:border-[#d99a2b]/60 focus:ring-2 focus:ring-[#d99a2b]/30"
+                className="border-white/12 placeholder:text-[#11111]/38 mt-2 w-full rounded-2xl border bg-white/[0.07] px-4 py-3 text-sm text-[#1111]] outline-none focus:border-[#d99a2b]/60 focus:ring-2 focus:ring-[#d99a2b]/30"
               />
             </label>
 
@@ -256,7 +260,8 @@ export default function ReservePage() {
         </section>
       </section>
 
-      <div className="bg-[#0b0807]/94 fixed inset-x-0 bottom-0 z-40 border-t border-white/10 p-3 backdrop-blur-xl sm:hidden">
+      <div
+        className="bg-[#0b0807]/94 fixed inset-x-0 bottom-0 z-40 border-t border-white/10 p-3 backdrop-blur-xl sm:hidden">
         <div className="grid grid-cols-2 gap-3">
           <Button asChild className="bg-[#d99a2b] text-[#1a100b] hover:bg-[#efb44c]">
             <a href="#reservation-form">Reserve</a>
@@ -275,11 +280,11 @@ export default function ReservePage() {
 }
 
 function Field({
-  id,
-  label,
-  className,
-  ...props
-}: React.InputHTMLAttributes<HTMLInputElement> & {
+                 id,
+                 label,
+                 className,
+                 ...props
+               }: React.InputHTMLAttributes<HTMLInputElement> & {
   id: string;
   label: string;
 }) {
