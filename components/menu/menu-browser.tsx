@@ -172,7 +172,7 @@ export function MenuBrowser({ initialMenu }: { initialMenu: MenuResponse }) {
                 type="search"
                 autoComplete="off"
                 className="border-white/12 placeholder:text-[#f8e6c8]/42 min-h-12 w-full rounded-full border bg-white/[0.07] pl-11 pr-4 text-sm text-[#fff7e8] shadow-sm outline-none transition focus:border-[#d99a2b]/60 focus:ring-2 focus:ring-[#d99a2b]/30"
-                placeholder="Search biryani, curry, naan..."
+                placeholder="Search biryani, curry, drinks..."
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
               />
@@ -189,7 +189,10 @@ export function MenuBrowser({ initialMenu }: { initialMenu: MenuResponse }) {
               Filters
             </Button>
           </div>
-          <div className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none]">
+          <nav
+            aria-label="Menu categories"
+            className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none]"
+          >
             <CategoryButton active={category === "all"} onClick={() => setCategory("all")}>
               All
             </CategoryButton>
@@ -202,7 +205,7 @@ export function MenuBrowser({ initialMenu }: { initialMenu: MenuResponse }) {
                 {menuCategory.name}
               </CategoryButton>
             ))}
-          </div>
+          </nav>
         </div>
       </section>
 
@@ -313,7 +316,8 @@ export function MenuBrowser({ initialMenu }: { initialMenu: MenuResponse }) {
                 aria-atomic="true"
                 className="text-sm font-bold text-[#f8e6c8]/60"
               >
-                {filteredItems.length} dishes match your choices
+                {filteredItems.length} {filteredItems.length === 1 ? "dish" : "dishes"} match your
+                choices
               </p>
               <h2 className="text-2xl font-black text-[#fff7e8] sm:text-3xl">Today&apos;s menu</h2>
             </div>
@@ -540,7 +544,9 @@ function CartBar({ itemCount, total }: { itemCount: number; total: number }) {
             <ShoppingBag className="h-5 w-5" />
           </span>
           <div>
-            <p className="text-sm font-black text-[#fff7e8]">{itemCount} items</p>
+            <p className="text-sm font-black text-[#fff7e8]">
+              {itemCount} {itemCount === 1 ? "item" : "items"}
+            </p>
             <p className="text-[#f8e6c8]/58 text-xs font-bold">
               {itemCount > 0 ? "Subtotal before fees" : "Add dishes to start"}
             </p>
@@ -553,7 +559,10 @@ function CartBar({ itemCount, total }: { itemCount: number; total: number }) {
           className="min-w-36 bg-[#d99a2b] text-[#1a100b] hover:bg-[#efb44c]"
         >
           {itemCount > 0 ? (
-            <Link href="/checkout">
+            <Link
+              href="/checkout"
+              aria-label={`Checkout, ${itemCount} ${itemCount === 1 ? "item" : "items"}, subtotal ${formatEuro(total)}`}
+            >
               <span className="hidden sm:inline">Checkout · </span>
               {formatEuro(total)}
               <ChevronDown className="h-4 w-4 rotate-[-90deg]" />
